@@ -11,43 +11,108 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Naskh Arab
 header{background:linear-gradient(160deg,var(--em),var(--em2));color:#fff;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 28px) 16px 30px;border-bottom:4px solid var(--gold);border-radius:0 0 28px 28px}
 header h1{margin:0;font-size:2.2rem;color:var(--gold)}
 header p{margin:6px 0 0;opacity:.9}
-main{padding:18px}
+main{padding:18px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 18px)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .card{background:#fff;border:1.5px solid var(--gold);border-radius:18px;padding:22px 8px;text-align:center;font-size:1.1rem;color:var(--em);font-family:inherit;box-shadow:0 2px 8px rgba(11,93,75,.1)}
 .card:active{background:var(--em);color:#fff}
 .card span{display:block;font-size:2rem;margin-bottom:6px}
-#view{display:none}
-#view h2{color:var(--em)}
-.back{background:var(--em);color:#fff;border:0;border-radius:12px;padding:10px 18px;font-family:inherit;font-size:1rem}
+.v{display:none}
+h2{color:var(--em);margin:10px 0}
+.btn{background:var(--em);color:#fff;border:0;border-radius:12px;padding:10px 18px;font-family:inherit;font-size:1rem}
+.top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .note{background:#fff;border-right:4px solid var(--gold);padding:14px;border-radius:10px;margin-top:14px}
+input{width:100%;padding:12px;border:1.5px solid var(--gold);border-radius:12px;font-family:inherit;font-size:1rem;margin:12px 0;background:#fff}
+.row{display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:8px;border:1px solid #e6dcb4;width:100%;font-family:inherit;font-size:1.1rem;color:var(--ink);text-align:right}
+.num{background:var(--em);color:#fff;min-width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.meta{margin-right:auto;font-size:.8rem;color:#777}
+.mus{background:#fff;border:1.5px solid var(--gold);border-radius:16px;padding:18px 16px;line-height:2.5;text-align:justify}
+.bsm{text-align:center;color:var(--em);margin:12px 0;font-size:1.6rem}
+.end{color:var(--gold)}
+.src{font-size:.8rem;color:#777;text-align:center;margin-top:16px}
 </style>
 </head>
 <body>
 <header><h1>سَكِينَة</h1><p>SAKINAH</p></header>
 <main>
-  <div id="home" class="grid"></div>
-  <div id="view"><button class="back" onclick="show()">رجوع ›</button><h2 id="vt"></h2><div class="note" id="vn"></div></div>
+<div id="home" class="v"><div class="grid" id="g"></div></div>
+
+<div id="list" class="v">
+ <div class="top"><button class="btn" onclick="show('home')">رجوع ›</button><h2>القرآن الكريم</h2></div>
+ <button class="btn" id="cont" style="display:none;width:100%" onclick="openSura(+ld('ln'))"></button>
+ <input id="q" placeholder="ابحث باسم السورة أو رقمها" oninput="drawList(this.value.trim())">
+ <div id="sl"></div>
+ <div class="src">نص القرآن: Tanzil.net (الرسم العثماني، الإصدار 1.1)، يُستخدم دون تعديل.</div>
+</div>
+
+<div id="reader" class="v">
+ <div class="top">
+  <button class="btn" onclick="openList()">رجوع ›</button>
+  <button class="btn" onclick="fz(2)">أ+</button>
+  <button class="btn" onclick="fz(-2)">أ−</button>
+ </div>
+ <h2 id="rt"></h2>
+ <div id="rd"></div>
+</div>
+
+<div id="other" class="v">
+ <button class="btn" onclick="show('home')">رجوع ›</button>
+ <h2 id="ot"></h2><div class="note" id="on"></div>
+</div>
 </main>
+<script charset="utf-8" src="quran-data.js"></script>
 <script>
-const S=[
- ["📖","القرآن الكريم","المرحلة 2"],
- ["🤲","الأذكار","المرحلة 3"],
- ["📿","المسبحة","المرحلة 4"],
- ["📜","الأحاديث الصحيحة","المرحلة 5"],
- ["🕌","مواقيت الصلاة","المرحلة 6"],
- ["🧭","اتجاه القبلة","المرحلة 7"],
- ["🌙","التقويم الهجري","المرحلة 8"],
- ["⭐","المفضلة والبحث","المرحلة 9"]
-];
-const home=document.getElementById("home"),view=document.getElementById("view");
-S.forEach(s=>{const b=document.createElement("button");b.className="card";
- b.innerHTML=`<span>${s[0]}</span>${s[1]}`;b.onclick=()=>show(s);home.appendChild(b)});
-function show(s){
- if(!s){view.style.display="none";home.style.display="grid";return}
- home.style.display="none";view.style.display="block";
- document.getElementById("vt").textContent=s[1];
- document.getElementById("vn").textContent="هذا القسم لم يُبنَ بعد، وسيُنفَّذ في "+s[2]+".";
-}
+const $=id=>document.getElementById(id);
+const AR='٠١٢٣٤٥٦٧٨٩',ar=n=>String(n).replace(/\d/g,d=>AR[d]);
+function ld(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function sv(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+let Q=null,fs=+ld('fs')||26,cur=0;
+const S=[["📖","القرآن الكريم"],["🤲","الأذكار","3"],["📿","المسبحة","4"],["📜","الأحاديث الصحيحة","5"],["🕌","مواقيت الصلاة","6"],["🧭","اتجاه القبلة","7"],["🌙","التقويم الهجري","8"],["⭐","المفضلة والبحث","9"]];
+S.forEach((s,i)=>{const b=document.createElement("button");b.className="card";
+ b.innerHTML=`<span>${s[0]}</span>${s[1]}`;
+ b.onclick=()=>i==0?openList():other(s);$("g").appendChild(b)});
+function show(v){["home","list","reader","other"].forEach(x=>$(x).style.display=x==v?"block":"none");window.scrollTo(0,0)}
+function other(s){show("other");$("ot").textContent=s[1];$("on").textContent="هذا القسم لم يُبنَ بعد، وسيُنفَّذ في المرحلة "+s[2]+"."}
+async function loadQ(){
+ if(Q)return Q;
+ const r=await fetch("quran-uthmani.txt");if(!r.ok)throw 0;
+ const t=await r.text();const o={};
+ t.split("\n").forEach(l=>{l=l.trim();if(!l||l[0]=="#")return;const p=l.split("|");if(p.length<3)return;
+  const s=+p[0],a=+p[1];if(!s||!a)return;(o[s]=o[s]||[])[a]=p.slice(2).join("|")});
+ Q=o;return o}
+function openList(){
+ show("list");
+ if(typeof QuranData=="undefined"){$("sl").textContent="تعذّر تحميل quran-data.js";return}
+ const n=+ld("ln"),c=$("cont");
+ if(n){c.style.display="block";c.textContent="متابعة القراءة: سورة "+QuranData.Sura[n][4]}
+ drawList($("q").value.trim())}
+function drawList(q){
+ const box=$("sl");box.innerHTML="";
+ QuranData.Sura.forEach((s,i)=>{
+  if(!i)return;
+  if(q&&!(s[4].includes(q)||String(i)==q||String(s[5]).toLowerCase().includes(q.toLowerCase())))return;
+  const b=document.createElement("button");b.className="row";
+  b.innerHTML=`<span class="num">${ar(i)}</span><span>${s[4]}</span><span class="meta">${s[7]=="Meccan"?"مكية":"مدنية"} · ${ar(s[1])} آية</span>`;
+  b.onclick=()=>openSura(i);box.appendChild(b)})}
+async function openSura(n){
+ cur=n;show("reader");const box=$("rd");box.textContent="جارٍ التحميل…";
+ try{
+  const q=await loadQ(),s=QuranData.Sura[n],v=q[n];
+  $("rt").textContent="سورة "+s[4];box.innerHTML="";
+  const bsm=q[1]&&q[1][1];let first=v[1];
+  if(n!=1&&n!=9&&bsm&&first.startsWith(bsm)){
+   const h=document.createElement("div");h.className="bsm";h.textContent=bsm;box.appendChild(h);
+   first=first.slice(bsm.length).trim()}
+  const p=document.createElement("div");p.className="mus";p.style.fontSize=fs+"px";p.id="mus";
+  for(let a=1;a<v.length;a++){
+   p.append((a==1?first:v[a])+" ");
+   const m=document.createElement("span");m.className="end";m.textContent="\uFD3F"+ar(a)+"\uFD3E ";p.append(m)}
+  box.appendChild(p);
+  const same=ld("ln")==String(n);sv("ln",n);
+  window.scrollTo(0,same?(+ld("pos")||0):0);
+ }catch(e){box.textContent="تعذّر تحميل نص القرآن. تأكد أن الملف quran-uthmani.txt موجود داخل مجلد www."}}
+function fz(d){fs=Math.max(18,Math.min(54,fs+d));sv("fs",fs);const m=$("mus");if(m)m.style.fontSize=fs+"px"}
+let tm;window.addEventListener("scroll",()=>{if($("reader").style.display!="block")return;clearTimeout(tm);tm=setTimeout(()=>sv("pos",Math.round(window.scrollY)),300)});
+show("home");
 </script>
 </body>
-</html>
+  </html>
