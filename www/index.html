@@ -8,12 +8,12 @@
 :root{--em:#0B5D4B;--em2:#06382d;--gold:#C9A227;--bg:#FBF9F3;--ink:#1d2b27}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Naskh Arabic","Traditional Arabic",serif;min-height:100vh}
-header{background:linear-gradient(160deg,var(--em),var(--em2));color:#fff;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 28px) 16px 30px;border-bottom:4px solid var(--gold);border-radius:0 0 28px 28px}
-header h1{margin:0;font-size:2.2rem;color:var(--gold)}
-header p{margin:6px 0 0;opacity:.9}
+header{background:linear-gradient(160deg,var(--em),var(--em2));color:#fff;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 18px) 16px 22px;border-bottom:4px solid var(--gold);border-radius:0 0 28px 28px}
+header h1{margin:0;font-size:2rem;color:var(--gold)}
+.clk{font-size:2.4rem;margin-top:4px}.hj{color:var(--gold);font-size:1.1rem}.gr{font-size:.85rem;opacity:.8}
 main{padding:18px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 18px)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.card{background:#fff;border:1.5px solid var(--gold);border-radius:18px;padding:22px 8px;text-align:center;font-size:1.1rem;color:var(--em);font-family:inherit;box-shadow:0 2px 8px rgba(11,93,75,.1)}
+.card{background:#fff;border:1.5px solid var(--gold);border-radius:18px;padding:20px 8px;text-align:center;font-size:1.1rem;color:var(--em);font-family:inherit;box-shadow:0 2px 8px rgba(11,93,75,.1)}
 .card:active{background:var(--em);color:#fff}
 .card span{display:block;font-size:2rem;margin-bottom:6px}
 .v{display:none}
@@ -21,23 +21,33 @@ h2{color:var(--em);margin:10px 0}
 .btn{background:var(--em);color:#fff;border:0;border-radius:12px;padding:10px 18px;font-family:inherit;font-size:1rem}
 .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .note{background:#fff;border-right:4px solid var(--gold);padding:14px;border-radius:10px;margin-top:14px}
-input{width:100%;padding:12px;border:1.5px solid var(--gold);border-radius:12px;font-family:inherit;font-size:1rem;margin:12px 0;background:#fff}
+input,select{width:100%;padding:12px;border:1.5px solid var(--gold);border-radius:12px;font-family:inherit;font-size:1rem;margin:8px 0;background:#fff}
+input[type=checkbox]{width:22px;height:22px;margin:0 0 0 8px;vertical-align:middle}
 .row{display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:8px;border:1px solid #e6dcb4;width:100%;font-family:inherit;font-size:1.1rem;color:var(--ink);text-align:right}
 .num{background:var(--em);color:#fff;min-width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem}
 .meta{margin-right:auto;font-size:.8rem;color:#777}
-.mus{background:#fff;border:1.5px solid var(--gold);border-radius:16px;padding:18px 16px;line-height:2.5;text-align:justify}
+.mus{background:#fff;border:1.5px solid var(--gold);border-radius:16px;padding:18px 16px;line-height:2.5;text-align:start}
 .bsm{text-align:center;color:var(--em);margin:12px 0;font-size:1.6rem}
 .end{color:var(--gold)}
 .src{font-size:.8rem;color:#777;text-align:center;margin-top:16px}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;margin-top:10px}
+.cg div{padding:6px 0;border-radius:10px;background:#fff;font-size:1.05rem;border:1px solid #eee}
+.cg small{display:block;font-size:.62rem;opacity:.6}
+.cg .hd{background:none;border:0;font-size:.72rem;color:var(--em)}
+.cg .occ{border:1.5px solid var(--gold);background:#fff8dc}
+.cg .td{background:var(--em);color:#fff}
+.mid{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}
+.mid h2{margin:0;font-size:1.3rem}
+.ft{font-size:.9rem;margin-top:12px}
 </style>
 </head>
 <body>
-<header><h1>سَكِينَة</h1><p>SAKINAH</p></header>
+<header><h1>سَكِينَة</h1><div class="clk" id="clk"></div><div class="hj" id="hj"></div><div class="gr" id="gr"></div></header>
 <main>
 <div id="home" class="v"><div class="grid" id="g"></div></div>
 
 <div id="list" class="v">
- <div class="top"><button class="btn" onclick="show('home')">رجوع ›</button><h2>القرآن الكريم</h2></div>
+ <div class="top"><button class="btn" onclick="history.back()">رجوع ›</button><h2>القرآن الكريم</h2></div>
  <button class="btn" id="cont" style="display:none;width:100%" onclick="openSura(+ld('ln'))"></button>
  <input id="q" placeholder="ابحث باسم السورة أو رقمها" oninput="drawList(this.value.trim())">
  <div id="sl"></div>
@@ -46,7 +56,7 @@ input{width:100%;padding:12px;border:1.5px solid var(--gold);border-radius:12px;
 
 <div id="reader" class="v">
  <div class="top">
-  <button class="btn" onclick="openList()">رجوع ›</button>
+  <button class="btn" onclick="history.back()">رجوع ›</button>
   <button class="btn" onclick="fz(2)">أ+</button>
   <button class="btn" onclick="fz(-2)">أ−</button>
  </div>
@@ -54,8 +64,35 @@ input{width:100%;padding:12px;border:1.5px solid var(--gold);border-radius:12px;
  <div id="rd"></div>
 </div>
 
+<div id="cal" class="v">
+ <div class="top"><button class="btn" onclick="history.back()">رجوع ›</button><h2>التقويم الهجري</h2></div>
+ <div class="mid"><button class="btn" onclick="cmo++;drawCal()">›</button><h2 id="ct"></h2><button class="btn" onclick="cmo--;drawCal()">‹</button></div>
+ <div class="cg" id="cg"></div>
+ <div class="note" id="co"></div>
+ <div class="ft">تعديل اليوم الهجري حسب الرؤية في بلدك:
+  <button class="btn" onclick="setAdj(-1)">−١</button>
+  <b id="adj"></b>
+  <button class="btn" onclick="setAdj(1)">+١</button></div>
+ <div class="src">التقويم محسوب بنظام أم القرى، وقد يختلف يوماً عن الرؤية المحلية.</div>
+</div>
+
+<div id="rem" class="v">
+ <div class="top"><button class="btn" onclick="history.back()">رجوع ›</button><h2>التذكيرات</h2></div>
+ <div class="note">تنبيهات دورية بالصلاة على النبي صلى الله عليه وسلم والأذكار، تعمل دون إنترنت.</div>
+ <p><label><input type="checkbox" id="ron">تفعيل التذكير</label></p>
+ <label>كل:</label>
+ <select id="riv"><option value="30">30 دقيقة</option><option value="60">ساعة</option><option value="120">ساعتين</option><option value="180">3 ساعات</option><option value="360">6 ساعات</option></select>
+ <label>عدم الإزعاج من الساعة:</label><select id="rqa"></select>
+ <label>إلى الساعة:</label><select id="rqb"></select>
+ <p id="rph"></p>
+ <button class="btn" onclick="saveRem()">حفظ وجدولة</button>
+ <button class="btn" onclick="sched(true)">تجربة بعد 10 ثوانٍ</button>
+ <div class="note" id="rs"></div>
+ <div class="src">افتح التطبيق مرة كل يوم أو يومين ليجدّد الجدولة. قد تؤخّر بعض الهواتف التنبيهات إن فعّلت توفير البطارية للتطبيق.</div>
+</div>
+
 <div id="other" class="v">
- <button class="btn" onclick="show('home')">رجوع ›</button>
+ <button class="btn" onclick="history.back()">رجوع ›</button>
  <h2 id="ot"></h2><div class="note" id="on"></div>
 </div>
 </main>
@@ -65,13 +102,30 @@ const $=id=>document.getElementById(id);
 const AR='٠١٢٣٤٥٦٧٨٩',ar=n=>String(n).replace(/\d/g,d=>AR[d]);
 function ld(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function sv(k,v){try{localStorage.setItem(k,v)}catch(e){}}
-let Q=null,fs=+ld('fs')||26,cur=0;
-const S=[["📖","القرآن الكريم"],["🤲","الأذكار","3"],["📿","المسبحة","4"],["📜","الأحاديث الصحيحة","5"],["🕌","مواقيت الصلاة","6"],["🧭","اتجاه القبلة","7"],["🌙","التقويم الهجري","8"],["⭐","المفضلة والبحث","9"]];
+let Q=null,fs=+ld('fs')||26,cur=0,cmo=0,adj=+ld("adj")||0;
+const VS=["home","list","reader","cal","rem","other"];
+const HM=["محرم","صفر","ربيع الأول","ربيع الآخر","جمادى الأولى","جمادى الآخرة","رجب","شعبان","رمضان","شوال","ذو القعدة","ذو الحجة"];
+const OCC={"1-1":"رأس السنة الهجرية","10-1":"يوم عاشوراء","1-9":"بداية شهر رمضان","1-10":"عيد الفطر","9-12":"يوم عرفة","10-12":"عيد الأضحى"};
+const HF=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric",month:"numeric",year:"numeric"});
+const HOK=HF.resolvedOptions().calendar=="islamic-umalqura";
+function hij(dt){const d=new Date(dt.getTime()+adj*864e5),o={};HF.formatToParts(d).forEach(p=>{if(p.type!="literal")o[p.type]=parseInt(p.value)});return{y:o.year,m:o.month,d:o.day}}
+
+const S=[["📖","القرآن الكريم"],["🤲","الأذكار","3"],["📿","المسبحة","4"],["📜","الأحاديث الصحيحة","5"],["🕌","مواقيت الصلاة","6"],["🧭","اتجاه القبلة","7"],["🌙","التقويم الهجري"],["⭐","المفضلة والبحث","9"],["🔔","تذكير بالصلاة على النبي"]];
 S.forEach((s,i)=>{const b=document.createElement("button");b.className="card";
- b.innerHTML=`<span>${s[0]}</span>${s[1]}`;
- b.onclick=()=>i==0?openList():other(s);$("g").appendChild(b)});
-function show(v){["home","list","reader","other"].forEach(x=>$(x).style.display=x==v?"block":"none");window.scrollTo(0,0)}
+ b.innerHTML=`<span>${s[0]}</span>${s[1]}`;if(i==8)b.style.gridColumn="1/-1";
+ b.onclick=()=>i==0?openList():i==6?openCal():i==8?openRem():other(s);$("g").appendChild(b)});
+
+function show(v,np){
+ VS.forEach(x=>$(x).style.display=x==v?"block":"none");
+ window.scrollTo(0,0);
+ if(!np)history.pushState({v:v,n:cur},"")}
 function other(s){show("other");$("ot").textContent=s[1];$("on").textContent="هذا القسم لم يُبنَ بعد، وسيُنفَّذ في المرحلة "+s[2]+"."}
+
+function tick(){const d=new Date();
+ $("clk").textContent=ar(d.toLocaleTimeString("ar-SA",{hour:"2-digit",minute:"2-digit",hour12:true}));
+ try{if(HOK){const h=hij(d);$("hj").textContent=new Intl.DateTimeFormat("ar",{weekday:"long"}).format(d)+" "+ar(h.d)+" "+HM[h.m-1]+" "+ar(h.y)+" هـ"}}catch(e){}
+ try{$("gr").textContent=ar(new Intl.DateTimeFormat("ar",{day:"numeric",month:"long",year:"numeric"}).format(d))}catch(e){}}
+
 async function loadQ(){
  if(Q)return Q;
  const r=await fetch("quran-uthmani.txt");if(!r.ok)throw 0;
@@ -79,9 +133,10 @@ async function loadQ(){
  t.split("\n").forEach(l=>{l=l.trim();if(!l||l[0]=="#")return;const p=l.split("|");if(p.length<3)return;
   const s=+p[0],a=+p[1];if(!s||!a)return;(o[s]=o[s]||[])[a]=p.slice(2).join("|")});
  Q=o;return o}
-function openList(){
- show("list");
+function openList(np){
+ show("list",np);
  if(typeof QuranData=="undefined"){$("sl").textContent="تعذّر تحميل quran-data.js";return}
+ if(QuranData.Sura.length>115)QuranData.Sura.length=115;
  const n=+ld("ln"),c=$("cont");
  if(n){c.style.display="block";c.textContent="متابعة القراءة: سورة "+QuranData.Sura[n][4]}
  drawList($("q").value.trim())}
@@ -93,8 +148,8 @@ function drawList(q){
   const b=document.createElement("button");b.className="row";
   b.innerHTML=`<span class="num">${ar(i)}</span><span>${s[4]}</span><span class="meta">${s[7]=="Meccan"?"مكية":"مدنية"} · ${ar(s[1])} آية</span>`;
   b.onclick=()=>openSura(i);box.appendChild(b)})}
-async function openSura(n){
- cur=n;show("reader");const box=$("rd");box.textContent="جارٍ التحميل…";
+async function openSura(n,np){
+ cur=n;show("reader",np);const box=$("rd");box.textContent="جارٍ التحميل…";
  try{
   const q=await loadQ(),s=QuranData.Sura[n],v=q[n];
   $("rt").textContent="سورة "+s[4];box.innerHTML="";
@@ -112,7 +167,77 @@ async function openSura(n){
  }catch(e){box.textContent="تعذّر تحميل نص القرآن. تأكد أن الملف quran-uthmani.txt موجود داخل مجلد www."}}
 function fz(d){fs=Math.max(18,Math.min(54,fs+d));sv("fs",fs);const m=$("mus");if(m)m.style.fontSize=fs+"px"}
 let tm;window.addEventListener("scroll",()=>{if($("reader").style.display!="block")return;clearTimeout(tm);tm=setTimeout(()=>sv("pos",Math.round(window.scrollY)),300)});
-show("home");
+
+function firstOf(off){
+ const t=new Date();t.setHours(12,0,0,0);
+ t.setDate(t.getDate()-(hij(t).d-1));
+ for(let i=0;i<Math.abs(off);i++){
+  if(off>0){t.setDate(t.getDate()+29);let g=0;while(hij(t).d!=1&&g++<3)t.setDate(t.getDate()+1)}
+  else{t.setDate(t.getDate()-1);t.setDate(t.getDate()-(hij(t).d-1))}}
+ return t}
+function openCal(np){cmo=0;show("cal",np);drawCal()}
+function setAdj(d){adj=Math.max(-2,Math.min(2,adj+d));sv("adj",adj);drawCal();tick()}
+function drawCal(){
+ $("adj").textContent=(adj>0?"+":adj<0?"−":"")+ar(Math.abs(adj));
+ if(!HOK){$("cg").textContent="تقويم أم القرى غير مدعوم على هذا الجهاز.";return}
+ const f=firstOf(cmo),h=hij(f),g=$("cg"),occ=[];
+ $("ct").textContent=HM[h.m-1]+" "+ar(h.y)+" هـ";g.innerHTML="";
+ ["سبت","أحد","اثنين","ثلاثاء","أربعاء","خميس","جمعة"].forEach(x=>{const e=document.createElement("div");e.className="hd";e.textContent=x;g.appendChild(e)});
+ for(let i=0;i<(f.getDay()+1)%7;i++){const e=document.createElement("div");e.style.visibility="hidden";g.appendChild(e)}
+ const td=hij(new Date()),t=new Date(f);let n=0;
+ while(n++<31){const x=hij(t);if(x.m!=h.m)break;
+  const e=document.createElement("div");e.innerHTML=ar(x.d)+"<small>"+t.getDate()+"</small>";
+  const k=x.d+"-"+x.m;if(OCC[k]){e.classList.add("occ");occ.push(ar(x.d)+" "+HM[x.m-1]+": "+OCC[k])}
+  if(cmo==0&&x.d==td.d)e.classList.add("td");
+  g.appendChild(e);t.setDate(t.getDate()+1)}
+ $("co").innerHTML=occ.length?occ.join("<br>"):"لا مناسبات مسجّلة في هذا الشهر."}
+
+const PH=["اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ","صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ","سُبْحَانَ اللَّهِ وَبِحَمْدِهِ","أَسْتَغْفِرُ اللَّهَ"];
+let R={on:false,iv:60,qa:23,qb:5,ph:[0,1]};
+try{R=Object.assign(R,JSON.parse(ld("rem")||"{}"))}catch(e){}
+const LN=()=>window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;
+function openRem(np){
+ show("rem",np);
+ ["rqa","rqb"].forEach(id=>{const s=$(id);if(!s.options.length)for(let h=0;h<24;h++)s.add(new Option(ar(h)+":00",h))});
+ $("ron").checked=R.on;$("riv").value=R.iv;$("rqa").value=R.qa;$("rqb").value=R.qb;
+ $("rph").innerHTML=PH.map((p,i)=>`<label style="display:block;margin:6px 0"><input type="checkbox" class="pc" value="${i}" ${R.ph.includes(i)?"checked":""}>${p}</label>`).join("")}
+function saveRem(){
+ R={on:$("ron").checked,iv:+$("riv").value,qa:+$("rqa").value,qb:+$("rqb").value,
+    ph:[...document.querySelectorAll(".pc")].filter(c=>c.checked).map(c=>+c.value)};
+ sv("rem",JSON.stringify(R));sched()}
+async function sched(test){
+ const L=LN(),st=$("rs");
+ if(!L){st.textContent="التذكير يعمل داخل التطبيق المثبّت على الهاتف فقط.";return}
+ try{
+  const p=await L.getPending();
+  if(p.notifications&&p.notifications.length)await L.cancel({notifications:p.notifications});
+  if(!R.on&&!test){st.textContent="التذكير متوقف.";return}
+  let pm=await L.checkPermissions();
+  if(pm.display!="granted")pm=await L.requestPermissions();
+  if(pm.display!="granted"){st.textContent="لم يُمنح إذن الإشعارات. فعّله من إعدادات الهاتف ثم أعد المحاولة.";return}
+  const ls=R.ph.length?R.ph:[0],n=[],now=Date.now();let k=0;
+  if(test)n.push({id:999,title:"سَكِينَة",body:PH[ls[0]],schedule:{at:new Date(now+10000),allowWhileIdle:true}});
+  if(R.on){const step=R.iv*60000;let t=now+step,i=0;
+   while(n.length<60&&i++<500){const h=new Date(t).getHours();
+    const q=R.qa>R.qb?(h>=R.qa||h<R.qb):(h>=R.qa&&h<R.qb);
+    if(!q)n.push({id:1000+n.length,title:"سَكِينَة",body:PH[ls[k++%ls.length]],schedule:{at:new Date(t),allowWhileIdle:true}});
+    t+=step}}
+  if(n.length)await L.schedule({notifications:n});
+  st.textContent=test?"سيصلك تنبيه تجريبي بعد 10 ثوانٍ.":"تمت الجدولة: "+ar(n.length)+" تنبيهاً قادماً."
+ }catch(e){st.textContent="تعذّر ضبط التذكير: "+(e&&e.message||e)}}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&R.on)sched()});
+
+window.addEventListener("popstate",e=>{
+ const s=e.state||{v:"home"};
+ if(s.v=="list")openList(true);
+ else if(s.v=="reader")openSura(s.n,true);
+ else if(s.v=="cal"){cmo=0;show("cal",true);drawCal()}
+ else if(s.v=="rem")openRem(true);
+ else show("home",true)});
+history.replaceState({v:"home"},"");
+tick();setInterval(tick,1000);
+show("home",true);
+if(R.on)sched();
 </script>
 </body>
-  </html>
+</html>
