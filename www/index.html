@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>سَكِينَة</title>
+<style>
+:root{--em:#0B5D4B;--em2:#06382d;--gold:#C9A227;--bg:#FBF9F3;--ink:#1d2b27}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Naskh Arabic","Traditional Arabic",serif;min-height:100vh}
+header{background:linear-gradient(160deg,var(--em),var(--em2));color:#fff;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 28px) 16px 30px;border-bottom:4px solid var(--gold);border-radius:0 0 28px 28px}
+header h1{margin:0;font-size:2.2rem;color:var(--gold)}
+header p{margin:6px 0 0;opacity:.9}
+main{padding:18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:#fff;border:1.5px solid var(--gold);border-radius:18px;padding:22px 8px;text-align:center;font-size:1.1rem;color:var(--em);font-family:inherit;box-shadow:0 2px 8px rgba(11,93,75,.1)}
+.card:active{background:var(--em);color:#fff}
+.card span{display:block;font-size:2rem;margin-bottom:6px}
+#view{display:none}
+#view h2{color:var(--em)}
+.back{background:var(--em);color:#fff;border:0;border-radius:12px;padding:10px 18px;font-family:inherit;font-size:1rem}
+.note{background:#fff;border-right:4px solid var(--gold);padding:14px;border-radius:10px;margin-top:14px}
+</style>
+</head>
+<body>
+<header><h1>سَكِينَة</h1><p>SAKINAH</p></header>
+<main>
+  <div id="home" class="grid"></div>
+  <div id="view"><button class="back" onclick="show()">رجوع ›</button><h2 id="vt"></h2><div class="note" id="vn"></div></div>
+</main>
+<script>
+const S=[
+ ["📖","القرآن الكريم","المرحلة 2"],
+ ["🤲","الأذكار","المرحلة 3"],
+ ["📿","المسبحة","المرحلة 4"],
+ ["📜","الأحاديث الصحيحة","المرحلة 5"],
+ ["🕌","مواقيت الصلاة","المرحلة 6"],
+ ["🧭","اتجاه القبلة","المرحلة 7"],
+ ["🌙","التقويم الهجري","المرحلة 8"],
+ ["⭐","المفضلة والبحث","المرحلة 9"]
+];
+const home=document.getElementById("home"),view=document.getElementById("view");
+S.forEach(s=>{const b=document.createElement("button");b.className="card";
+ b.innerHTML=`<span>${s[0]}</span>${s[1]}`;b.onclick=()=>show(s);home.appendChild(b)});
+function show(s){
+ if(!s){view.style.display="none";home.style.display="grid";return}
+ home.style.display="none";view.style.display="block";
+ document.getElementById("vt").textContent=s[1];
+ document.getElementById("vn").textContent="هذا القسم لم يُبنَ بعد، وسيُنفَّذ في "+s[2]+".";
+}
+</script>
+</body>
+</html>
