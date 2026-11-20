@@ -48,6 +48,21 @@ input[type=checkbox]{width:22px;height:22px;margin:0 0 0 8px;vertical-align:midd
 .mid{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}
 .mid h2{margin:0;font-size:1.3rem}
 .ft{font-size:.9rem;margin-top:12px}
+.led-card{background:linear-gradient(#f6e3b4,#efd49a);border:2px solid #8a5a2b;border-radius:18px;padding:12px;margin-top:8px}
+.nx{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;font-size:1.15rem;color:#5a2a10;font-weight:bold}
+.pnl{background:#000;border-radius:8px;padding:6px 8px;display:flex;justify-content:center;align-items:center;gap:3px;min-height:48px}
+.pnl svg{height:32px;width:auto}
+.prw,.cap{display:grid;grid-template-columns:1fr 84px 1fr;gap:6px;align-items:center}
+.prw{margin:7px 0}
+.cap{text-align:center;font-weight:bold;color:#5a2a10;font-size:.9rem}
+.prw.nxt .pnl.a{box-shadow:0 0 0 2px var(--gold),0 0 14px #ff3b3b}
+.pl{background:#b0793f;color:#2a1405;border-radius:10px;text-align:center;font-size:1.05rem;padding:8px 2px;font-weight:bold}
+.ap{font-size:.72rem;color:#ff6b6b;margin-right:2px}
+.set{background:#fff;border:1px solid #e6dcb4;border-radius:12px;padding:10px 14px;margin-top:14px}
+.set label{display:block;margin-top:10px;font-size:.95rem;color:var(--em)}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.g3 span{font-size:.8rem;display:block;text-align:center}
+.g3 input{padding:8px;margin:2px 0;text-align:center}
 .tbw{position:relative;width:260px;height:260px;margin:12px auto}
 .tbw svg{position:absolute;inset:0}
 #tbtn{position:absolute;inset:22px;border-radius:50%;border:0;background:linear-gradient(160deg,var(--em),var(--em2));color:#fff;font-family:inherit;touch-action:manipulation;box-shadow:0 6px 18px rgba(6,56,45,.35)}
@@ -108,6 +123,31 @@ summary{color:var(--em);font-weight:bold}
  <p><label><input type="checkbox" id="tvb" onchange="T.vb=this.checked;sT()">الاهتزاز عند كل ضغطة</label></p>
 </div>
 
+<div id="pt" class="v">
+ <div class="top"><button class="btn" onclick="back()">رجوع ›</button><h2>مواقيت الصلاة</h2></div>
+ <div class="led-card">
+  <div class="nx"><span id="nxl"></span><div class="pnl" id="nxc"></div></div>
+  <div class="cap"><span>الأذان</span><span></span><span>الإقامة</span></div>
+  <div id="prow"></div>
+  <div class="src" id="ptc"></div>
+ </div>
+ <details class="set"><summary>إعدادات المواقيت والأذان</summary>
+  <label>المدينة</label><select id="pcity" onchange="pcSel()"></select>
+  <button class="btn" onclick="gps()">📍 تحديد موقعي بالـGPS</button>
+  <div class="g3"><div><span>خط العرض</span><input id="plat" type="number" step="any"></div><div><span>خط الطول</span><input id="plng" type="number" step="any"></div></div>
+  <label>طريقة الحساب</label>
+  <select id="pm"><option value="egy">الهيئة المصرية العامة للمساحة</option><option value="mwl">رابطة العالم الإسلامي</option><option value="uq">أم القرى</option><option value="khi">جامعة العلوم الإسلامية، كراتشي</option></select>
+  <label>وقت العصر</label>
+  <select id="pas"><option value="1">ظل المثل (شافعي، مالكي، حنبلي)</option><option value="2">ظل المثلين (حنفي)</option></select>
+  <label>تعديل المواقيت بالدقائق (+ أو −)</label><div class="g3" id="padj"></div>
+  <label>الإقامة بعد الأذان بالدقائق</label><div class="g3" id="piq"></div>
+  <label><input type="checkbox" id="pnn" style="width:20px;height:20px;margin:0 0 0 8px;vertical-align:middle">تنبيه عند دخول وقت الصلاة</label>
+  <label><input type="checkbox" id="pns" style="width:20px;height:20px;margin:0 0 0 8px;vertical-align:middle">صوت الأذان من ملف azan.mp3 (يلزم رفعه)</label>
+  <p><button class="btn" onclick="savePt()">حفظ</button> <button class="btn" onclick="schedAzan(true)">تجربة التنبيه بعد 10 ثوانٍ</button></p>
+  <div class="note" id="pst"></div>
+ </details>
+</div>
+
 <div id="cal" class="v">
  <div class="top"><button class="btn" onclick="back()">رجوع ›</button><h2>التقويم الهجري</h2></div>
  <div class="mid"><button class="btn" onclick="cmo++;drawCal()">›</button><h2 id="ct"></h2><button class="btn" onclick="cmo--;drawCal()">‹</button></div>
@@ -147,7 +187,7 @@ const AR='٠١٢٣٤٥٦٧٨٩',ar=n=>String(n).replace(/\d/g,d=>AR[d]);
 function ld(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function sv(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 let Q=null,fs=+ld('fs')||26,cur=0,cmo=0,adj=+ld("adj")||0;
-const VS=["home","list","reader","adk","adr","tsb","cal","rem","other"];
+const VS=["home","list","reader","adk","adr","tsb","pt","cal","rem","other"];
 const HM=["محرم","صفر","ربيع الأول","ربيع الآخر","جمادى الأولى","جمادى الآخرة","رجب","شعبان","رمضان","شوال","ذو القعدة","ذو الحجة"];
 const OCC={"1-1":"رأس السنة الهجرية","10-1":"يوم عاشوراء","1-9":"بداية شهر رمضان","1-10":"عيد الفطر","9-12":"يوم عرفة","10-12":"عيد الأضحى"};
 const HF=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric",month:"numeric",year:"numeric"});
@@ -157,7 +197,7 @@ function hij(dt){const d=new Date(dt.getTime()+adj*864e5),o={};HF.formatToParts(
 const S=[["📖","القرآن الكريم"],["🤲","الأذكار","3"],["📿","المسبحة","4"],["📜","الأحاديث الصحيحة","5"],["🕌","مواقيت الصلاة","6"],["🧭","اتجاه القبلة","7"],["🌙","التقويم الهجري"],["⭐","المفضلة والبحث","9"],["🔔","تذكير بالصلاة على النبي"]];
 S.forEach((s,i)=>{const b=document.createElement("button");b.className="card";
  b.innerHTML=`<span>${s[0]}</span>${s[1]}`;if(i==8)b.style.gridColumn="1/-1";
- b.onclick=()=>i==0?openList():i==1?openAdk():i==2?openTsb():i==6?openCal():i==8?openRem():other(s);$("g").appendChild(b)});
+ b.onclick=()=>i==0?openList():i==1?openAdk():i==2?openTsb():i==4?openPt():i==6?openCal():i==8?openRem():other(s);$("g").appendChild(b)});
 
 function show(v,np){
  VS.forEach(x=>$(x).style.display=x==v?"block":"none");
@@ -259,7 +299,7 @@ let T={i:0,t:33,vb:true,c:{},tot:{},r:{}};
 try{T=Object.assign(T,JSON.parse(ld("tsb")||"{}"))}catch(e){}
 const sT=()=>sv("tsb",JSON.stringify(T));
 function hap(strong){const H=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.Haptics;
- try{if(H){strong?H.vibrate({duration:300}):H.impact({style:"LIGHT"})}else if(navigator.vibrate)navigator.vibrate(strong?300:15)}catch(e){}}
+ try{if(H&&H.vibrate)H.vibrate({duration:strong?300:30});else if(navigator.vibrate)navigator.vibrate(strong?300:30)}catch(e){}}
 function openTsb(np){show("tsb",np);const z=$("tz");if(!z.options.length)TP.forEach((p,i)=>z.add(new Option(p,i)));
  z.value=T.i;$("tt").value=T.t;$("tvb").checked=T.vb;drawT()}
 function drawT(){const i=T.i,c=T.c[i]||0;
@@ -281,6 +321,99 @@ function resetT(){const b=$("trs");
  clearTimeout(rc);rc=0;b.textContent="تصفير";T.c[T.i]=0;sT();drawT()}
 function tzSel(){T.i=+$("tz").value;sT();drawT()}
 function ttSel(){T.t=+$("tt").value;sT();drawT()}
+
+/*PT-START*/
+const R2=Math.PI/180,sn=d=>Math.sin(d*R2),cs=d=>Math.cos(d*R2),tn=d=>Math.tan(d*R2),asn=x=>Math.asin(x)/R2,acs=x=>Math.acos(x)/R2,at2=(y,x)=>Math.atan2(y,x)/R2,acot=x=>Math.atan(1/x)/R2;
+const fa=a=>{a%=360;return a<0?a+360:a},fh=x=>{x%=24;return x<0?x+24:x};
+function sunPos(jd){const D=jd-2451545,g=fa(357.529+.98560028*D),q=fa(280.459+.98564736*D),L=fa(q+1.915*sn(g)+.02*sn(2*g)),e=23.439-3.6e-7*D,RA=fh(at2(cs(e)*sn(L),cs(L))/15);return{d:asn(sn(e)*sn(L)),eq:q/15-RA}}
+const METH={egy:{f:19.5,i:17.5},mwl:{f:18,i:17},uq:{f:18.5,i:0,im:90},khi:{f:18,i:18}};
+const CT=[["ود مدني",14.4012,33.5199],["الخرطوم",15.5007,32.5599],["أم درمان",15.6445,32.4777],["بورتسودان",19.6158,37.2164],["كسلا",15.4510,36.4040],["الأبيض",13.1842,30.2167],["المدينة المنورة",24.4686,39.6143],["مكة المكرمة",21.4225,39.8262],["جدة",21.4858,39.1925],["الرياض",24.7136,46.6753],["القاهرة",30.0444,31.2357]];
+let PT={city:"ود مدني",lat:14.4012,lng:33.5199,m:"egy",as:1,adj:{},iq:{fajr:20,dhuhr:15,asr:15,maghrib:5,isha:15},nn:true,ns:false};
+try{PT=Object.assign(PT,JSON.parse(ld("pt")||"{}"))}catch(e){}
+function calc(date){
+ const y=date.getFullYear(),m=date.getMonth(),d=date.getDate(),tz=-new Date(y,m,d,12).getTimezoneOffset()/60;
+ const jd=Date.UTC(y,m,d)/864e5+2440587.5+(12-PT.lng/15)/24,s=sunPos(jd),noon=fh(12-s.eq),M=METH[PT.m]||METH.egy;
+ const H=a=>acs(Math.max(-1,Math.min(1,(sn(a)-sn(s.d)*sn(PT.lat))/(cs(s.d)*cs(PT.lat)))))/15;
+ const ar2=acot(+PT.as+tn(Math.abs(PT.lat-s.d))),off=tz-PT.lng/15;
+ const t={fajr:noon-H(-M.f),sunrise:noon-H(-.833),dhuhr:noon,asr:noon+H(ar2),maghrib:noon+H(-.833)};
+ t.isha=M.i?noon+H(-M.i):t.maghrib+M.im/60;
+ const o={};for(const k in t)o[k]=fh(t[k]+off)+((PT.adj&&+PT.adj[k])||0)/60;return o}
+/*PT-END*/
+const SG={a:"12,4 48,4 44,10 16,10",b:"52,8 52,48 46,44 46,14",c:"52,56 52,96 46,90 46,60",d:"12,100 48,100 44,94 16,94",e:"8,56 8,96 14,90 14,60",f:"8,8 8,48 14,44 14,14",g:"12,52 16,48 44,48 48,52 44,56 16,56"};
+const DM=["abcdef","bc","abdeg","abcdg","bcfg","acdfg","acdefg","abc","abcdefg","abcdfg"];
+function led(s,on,off){let o="";for(const ch of s){
+ if(ch==":"){o+=`<svg viewBox="0 0 20 104"><circle cx="10" cy="36" r="5" fill="${on}"/><circle cx="10" cy="68" r="5" fill="${on}"/></svg>`;continue}
+ const d=DM[+ch];o+='<svg viewBox="0 0 60 104">'+Object.keys(SG).map(k=>`<polygon points="${SG[k]}" fill="${d.includes(k)?on:off}"/>`).join("")+"</svg>"}return o}
+const p2=n=>String(n).padStart(2,"0");
+function f12(x){x=fh(x);let H=Math.floor(x),M=Math.round((x-H)*60);if(M==60){M=0;H=(H+1)%24}return{s:p2(H%12||12)+":"+p2(M),p:H<12?"ص":"م"}}
+const PR=[["fajr","الفجر"],["sunrise","الشروق"],["dhuhr","الظهر"],["asr","العصر"],["maghrib","المغرب"],["isha","العشاء"]];
+const PN={fajr:"الفجر",dhuhr:"الظهر",asr:"العصر",maghrib:"المغرب",isha:"العشاء"};
+const dayAt=(d,h)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime()+h*36e5;
+let NX=null;
+function nextP(now){
+ for(let k=0;k<2;k++){const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+k,12),T=calc(d);
+  for(const key of ["fajr","dhuhr","asr","maghrib","isha"]){const t=dayAt(d,T[key]);if(t>now.getTime())return{k:key,t:t,jum:d.getDay()==5&&key=="dhuhr"}}}
+ return null}
+function openPt(np){show("pt",np);fillPtSet();drawPt()}
+function drawPt(){
+ const now=new Date(),T=calc(now),box=$("prow");box.innerHTML="";NX=nextP(now);
+ PR.forEach(([k,n])=>{
+  const nm=k=="dhuhr"&&now.getDay()==5?"الجمعة":n,a=f12(T[k]);
+  const r=document.createElement("div");r.className="prw"+(NX&&NX.k==k?" nxt":"");
+  r.innerHTML='<div class="pnl a">'+led(a.s,"#ff2b2b","#3a0909")+'<span class="ap">'+a.p+'</span></div><div class="pl">'+nm+'</div>'+
+   (k=="sunrise"?"<div></div>":'<div class="pnl">'+led(f12(T[k]+((+PT.iq[k])||0)/60).s,"#2bdc5f","#073a14")+"</div>");
+  box.appendChild(r)});
+ $("ptc").textContent=PT.city+" · "+(PT.m=="egy"?"الهيئة المصرية للمساحة":PT.m=="mwl"?"رابطة العالم الإسلامي":PT.m=="uq"?"أم القرى":"كراتشي")+" · قارن بمسجدك المحلي وعدّل الدقائق إن لزم";
+ updNx()}
+function updNx(){
+ if(!NX){return}
+ let d=Math.floor((NX.t-Date.now())/1000);
+ if(d<0){drawPt();return}
+ $("nxl").textContent="باقٍ "+(NX.jum?"للجمعة":PN[NX.k].replace(/^ال/,"لل"));
+ $("nxc").innerHTML=led(p2(Math.floor(d/3600))+":"+p2(Math.floor(d%3600/60))+":"+p2(d%60),"#ffb020","#3a2808")}
+function fillPtSet(){
+ const c=$("pcity");if(!c.options.length){CT.forEach((x,i)=>c.add(new Option(x[0],i)));c.add(new Option("موقع مخصص",-1))
+  PR.forEach(([k,n])=>{$("padj").insertAdjacentHTML("beforeend",`<div><span>${n}</span><input type="number" id="ad_${k}"></div>`);
+   if(k!="sunrise")$("piq").insertAdjacentHTML("beforeend",`<div><span>${n}</span><input type="number" id="iq_${k}"></div>`)})}
+ const i=CT.findIndex(x=>x[0]==PT.city);c.value=i;
+ $("plat").value=PT.lat;$("plng").value=PT.lng;$("pm").value=PT.m;$("pas").value=PT.as;
+ PR.forEach(([k])=>{$("ad_"+k).value=(PT.adj&&PT.adj[k])||0;if(k!="sunrise")$("iq_"+k).value=PT.iq[k]||0});
+ $("pnn").checked=PT.nn;$("pns").checked=PT.ns}
+function pcSel(){const i=+$("pcity").value;if(i>=0){$("plat").value=CT[i][1];$("plng").value=CT[i][2]}}
+function savePt(){
+ const i=+$("pcity").value;PT.city=i>=0?CT[i][0]:"موقع مخصص";
+ PT.lat=+$("plat").value;PT.lng=+$("plng").value;PT.m=$("pm").value;PT.as=+$("pas").value;
+ PT.adj={};PT.iq={};PR.forEach(([k])=>{PT.adj[k]=+$("ad_"+k).value||0;if(k!="sunrise")PT.iq[k]=+$("iq_"+k).value||0});
+ PT.nn=$("pnn").checked;PT.ns=$("pns").checked;sv("pt",JSON.stringify(PT));drawPt();schedAzan()}
+async function gps(){
+ const st=$("pst"),G=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.Geolocation;st.textContent="جارٍ تحديد الموقع…";
+ try{let pos;
+  if(G){await G.requestPermissions();pos=await G.getCurrentPosition({timeout:20000})}
+  else pos=await new Promise((ok,no)=>navigator.geolocation.getCurrentPosition(ok,no,{timeout:20000}));
+  PT.lat=pos.coords.latitude;PT.lng=pos.coords.longitude;PT.city="موقعي الحالي";sv("pt",JSON.stringify(PT));
+  fillPtSet();$("pcity").value=-1;drawPt();st.textContent="تم تحديد موقعك. اضغط حفظ لتحديث التنبيهات.";
+ }catch(e){st.textContent="تعذّر تحديد الموقع: فعّل الـGPS وامنح التطبيق إذن الموقع، أو اختر مدينتك."}}
+async function schedAzan(test){
+ const L=LN(),st=$("pst");
+ if(!L){if(test)st.textContent="التنبيهات تعمل داخل التطبيق المثبّت فقط.";return}
+ try{
+  try{await L.createChannel({id:"azan_snd",name:"الأذان (ملف صوتي)",importance:5,visibility:1,sound:"azan.mp3",vibration:true})}catch(e){}
+  try{await L.createChannel({id:"azan_def",name:"الأذان",importance:5,visibility:1,vibration:true})}catch(e){}
+  const p=await L.getPending(),od=(p.notifications||[]).filter(n=>n.id>=2000);
+  if(od.length)await L.cancel({notifications:od});
+  if(!PT.nn&&!test){if(st)st.textContent="تنبيهات الأذان متوقفة.";return}
+  let pm=await L.checkPermissions();if(pm.display!="granted")pm=await L.requestPermissions();
+  if(pm.display!="granted"){if(st)st.textContent="لم يُمنح إذن الإشعارات. فعّله من إعدادات الهاتف.";return}
+  const ch=PT.ns?"azan_snd":"azan_def",n=[],now=Date.now();
+  for(let day=0;day<7;day++){
+   const d=new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()+day,12),T=calc(d);
+   ["fajr","dhuhr","asr","maghrib","isha"].forEach((k,i)=>{
+    const t=dayAt(d,T[k]);if(t<=now)return;const f=f12(T[k]);
+    n.push({id:2000+day*10+i,title:"حان وقت صلاة "+(k=="dhuhr"&&d.getDay()==5?"الجمعة":PN[k]),body:PT.city+" · "+f.s+" "+f.p,channelId:ch,schedule:{at:new Date(t),allowWhileIdle:true}})})}
+  if(test)n.push({id:2999,title:"تجربة الأذان",body:"هذا تنبيه تجريبي",channelId:ch,schedule:{at:new Date(now+10000),allowWhileIdle:true}});
+  if(n.length)await L.schedule({notifications:n});
+  if(st)st.textContent=test?"سيصلك تنبيه تجريبي بعد 10 ثوانٍ.":"تمت جدولة "+ar(n.length)+" تنبيهاً للأيام السبعة القادمة. افتح التطبيق مرة في الأسبوع على الأقل لتجديدها."
+ }catch(e){if(st)st.textContent="تعذّر ضبط التنبيه: "+(e&&e.message||e)}}
 
 function firstOf(off){
  const t=new Date();t.setHours(12,0,0,0);
@@ -324,7 +457,7 @@ async function sched(test){
  if(!L){st.textContent="التذكير يعمل داخل التطبيق المثبّت على الهاتف فقط.";return}
  try{
   const p=await L.getPending();
-  if(p.notifications&&p.notifications.length)await L.cancel({notifications:p.notifications});
+  const od=(p.notifications||[]).filter(n=>n.id<2000);if(od.length)await L.cancel({notifications:od});
   if(!R.on&&!test){st.textContent="التذكير متوقف.";return}
   let pm=await L.checkPermissions();
   if(pm.display!="granted")pm=await L.requestPermissions();
@@ -339,13 +472,14 @@ async function sched(test){
   if(n.length)await L.schedule({notifications:n});
   st.textContent=test?"سيصلك تنبيه تجريبي بعد 10 ثوانٍ.":"تمت الجدولة: "+ar(n.length)+" تنبيهاً قادماً."
  }catch(e){st.textContent="تعذّر ضبط التذكير: "+(e&&e.message||e)}}
-document.addEventListener("visibilitychange",()=>{if(!document.hidden&&R.on)sched()});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){if(R.on)sched();if(PT.nn)schedAzan()}});
 
 document.addEventListener("contextmenu",e=>{if(e.target.tagName!="INPUT")e.preventDefault()});
 document.querySelector("header").onclick=function(){this.classList.toggle("mini")};
-tick();setInterval(tick,1000);
+tick();setInterval(()=>{tick();if($("pt").style.display=="block")updNx()},1000);
 show("home",true);
 if(R.on)sched();
+if(PT.nn)schedAzan();
 </script>
 </body>
 </html>
