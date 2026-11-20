@@ -39,6 +39,10 @@ input[type=checkbox]{width:22px;height:22px;margin:0 0 0 8px;vertical-align:midd
 .mid{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}
 .mid h2{margin:0;font-size:1.3rem}
 .ft{font-size:.9rem;margin-top:12px}
+.ad{background:#fff;border:1.5px solid var(--gold);border-radius:16px;padding:14px;margin:10px 0;line-height:2.3;white-space:pre-wrap}
+.cp{background:none;border:1px solid var(--gold);color:var(--em);border-radius:10px;font-family:inherit;padding:4px 12px;margin-top:6px}
+details{background:#fff;border-right:4px solid var(--gold);border-radius:10px;padding:10px 14px;margin:12px 0;font-size:.9rem;line-height:1.9}
+summary{color:var(--em);font-weight:bold}
 </style>
 </head>
 <body>
@@ -62,6 +66,18 @@ input[type=checkbox]{width:22px;height:22px;margin:0 0 0 8px;vertical-align:midd
  </div>
  <h2 id="rt"></h2>
  <div id="rd"></div>
+</div>
+
+<div id="adk" class="v">
+ <div class="top"><button class="btn" onclick="history.back()">رجوع ›</button><h2>الأذكار</h2></div>
+ <input id="aq" placeholder="ابحث في الأذكار" oninput="drawAdk(this.value.trim())">
+ <div id="al"></div>
+ <div class="src">أذكار من كتاب «حصن المسلم» للشيخ سعيد بن علي بن وهف القحطاني، من ملف JSON لمستودع rn0x/hisn_almuslim_json. التخريج كما ورد في الملف.</div>
+</div>
+
+<div id="adr" class="v">
+ <div class="top"><button class="btn" onclick="history.back()">رجوع ›</button><button class="btn" onclick="fz2(2)">أ+</button><button class="btn" onclick="fz2(-2)">أ−</button></div>
+ <h2 id="adt"></h2><div id="adb"></div>
 </div>
 
 <div id="cal" class="v">
@@ -103,7 +119,7 @@ const AR='٠١٢٣٤٥٦٧٨٩',ar=n=>String(n).replace(/\d/g,d=>AR[d]);
 function ld(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function sv(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 let Q=null,fs=+ld('fs')||26,cur=0,cmo=0,adj=+ld("adj")||0;
-const VS=["home","list","reader","cal","rem","other"];
+const VS=["home","list","reader","adk","adr","cal","rem","other"];
 const HM=["محرم","صفر","ربيع الأول","ربيع الآخر","جمادى الأولى","جمادى الآخرة","رجب","شعبان","رمضان","شوال","ذو القعدة","ذو الحجة"];
 const OCC={"1-1":"رأس السنة الهجرية","10-1":"يوم عاشوراء","1-9":"بداية شهر رمضان","1-10":"عيد الفطر","9-12":"يوم عرفة","10-12":"عيد الأضحى"};
 const HF=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric",month:"numeric",year:"numeric"});
@@ -113,7 +129,7 @@ function hij(dt){const d=new Date(dt.getTime()+adj*864e5),o={};HF.formatToParts(
 const S=[["📖","القرآن الكريم"],["🤲","الأذكار","3"],["📿","المسبحة","4"],["📜","الأحاديث الصحيحة","5"],["🕌","مواقيت الصلاة","6"],["🧭","اتجاه القبلة","7"],["🌙","التقويم الهجري"],["⭐","المفضلة والبحث","9"],["🔔","تذكير بالصلاة على النبي"]];
 S.forEach((s,i)=>{const b=document.createElement("button");b.className="card";
  b.innerHTML=`<span>${s[0]}</span>${s[1]}`;if(i==8)b.style.gridColumn="1/-1";
- b.onclick=()=>i==0?openList():i==6?openCal():i==8?openRem():other(s);$("g").appendChild(b)});
+ b.onclick=()=>i==0?openList():i==1?openAdk():i==6?openCal():i==8?openRem():other(s);$("g").appendChild(b)});
 
 function show(v,np){
  VS.forEach(x=>$(x).style.display=x==v?"block":"none");
@@ -167,6 +183,40 @@ async function openSura(n,np){
  }catch(e){box.textContent="تعذّر تحميل نص القرآن. تأكد أن الملف quran-uthmani.txt موجود داخل مجلد www."}}
 function fz(d){fs=Math.max(18,Math.min(54,fs+d));sv("fs",fs);const m=$("mus");if(m)m.style.fontSize=fs+"px"}
 let tm;window.addEventListener("scroll",()=>{if($("reader").style.display!="block")return;clearTimeout(tm);tm=setTimeout(()=>sv("pos",Math.round(window.scrollY)),300)});
+
+let AD=null,afs=+ld("afs")||24;
+const nz=s=>String(s).replace(/[\u064B-\u065F\u0670\u0640]/g,"").replace(/[أإآ]/g,"ا");
+async function loadAd(){
+ if(AD)return AD;
+ const r=await fetch("hisn_almuslim.json");if(!r.ok)throw new Error("الملف hisn_almuslim.json غير موجود في www");
+ const j=await r.json();let a;
+ if(Array.isArray(j))a=j.map((x,i)=>({t:x.title||x.name||x.category||("باب "+(i+1)),x:[].concat(x.text||[]),f:[].concat(x.footnote||[])}));
+ else a=Object.keys(j).map(k=>({t:k,x:[].concat((j[k]&&j[k].text)||[]),f:[].concat((j[k]&&j[k].footnote)||[])}));
+ if(!a.length||a.every(c=>!c.x.length))throw new Error("بنية الملف غير متوقعة: "+Object.keys(j).slice(0,5).join(" ، "));
+ AD=a;return a}
+async function openAdk(np){
+ show("adk",np);const box=$("al");box.textContent="جارٍ التحميل…";
+ try{await loadAd();drawAdk($("aq").value.trim())}catch(e){box.textContent="تعذّر تحميل الأذكار: "+e.message}}
+function drawAdk(q){
+ const box=$("al");box.innerHTML="";const k=nz(q);
+ AD.forEach((c,i)=>{
+  if(k&&!(nz(c.t).includes(k)||c.x.some(t=>nz(t).includes(k))))return;
+  const b=document.createElement("button");b.className="row";
+  b.innerHTML='<span class="num">'+ar(i+1)+'</span><span></span><span class="meta">'+ar(c.x.length)+' نص</span>';
+  b.children[1].textContent=c.t;b.onclick=()=>openAdr(i);box.appendChild(b)})}
+function openAdr(n,np){
+ cur=n;show("adr",np);const c=AD[n],box=$("adb");
+ $("adt").textContent=c.t;box.innerHTML="";
+ c.x.forEach(t=>{
+  const d=document.createElement("div");d.className="ad";d.style.fontSize=afs+"px";
+  const s=document.createElement("div");s.textContent=t;d.appendChild(s);
+  const b=document.createElement("button");b.className="cp";b.textContent="نسخ";
+  b.onclick=()=>{try{navigator.clipboard.writeText(t);b.textContent="تم النسخ"}catch(e){b.textContent="تعذّر النسخ"}};
+  d.appendChild(b);box.appendChild(d)});
+ if(c.f.length){const dt=document.createElement("details"),sm=document.createElement("summary");
+  sm.textContent="التخريج والملاحظات";dt.appendChild(sm);
+  c.f.forEach(t=>{const p=document.createElement("div");p.textContent=t;dt.appendChild(p)});box.appendChild(dt)}}
+function fz2(d){afs=Math.max(16,Math.min(48,afs+d));sv("afs",afs);document.querySelectorAll("#adb .ad").forEach(e=>e.style.fontSize=afs+"px")}
 
 function firstOf(off){
  const t=new Date();t.setHours(12,0,0,0);
@@ -231,6 +281,8 @@ window.addEventListener("popstate",e=>{
  const s=e.state||{v:"home"};
  if(s.v=="list")openList(true);
  else if(s.v=="reader")openSura(s.n,true);
+ else if(s.v=="adk")openAdk(true);
+ else if(s.v=="adr")openAdr(s.n,true);
  else if(s.v=="cal"){cmo=0;show("cal",true);drawCal()}
  else if(s.v=="rem")openRem(true);
  else show("home",true)});
