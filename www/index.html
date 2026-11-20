@@ -7,10 +7,19 @@
 <style>
 :root{--em:#0B5D4B;--em2:#06382d;--gold:#C9A227;--bg:#FBF9F3;--ink:#1d2b27}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input{-webkit-user-select:text;user-select:text}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Naskh Arabic","Traditional Arabic",serif;min-height:100vh}
 header{background:linear-gradient(160deg,var(--em),var(--em2));color:#fff;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 18px) 16px 22px;border-bottom:4px solid var(--gold);border-radius:0 0 28px 28px}
 header h1{margin:0;font-size:2rem;color:var(--gold)}
-.clk{font-size:2.4rem;margin-top:4px}.hj{color:var(--gold);font-size:1.1rem}.gr{font-size:.85rem;opacity:.8}
+.clk{font-size:2.6rem;margin-top:4px;font-weight:bold;line-height:1.3;background:linear-gradient(90deg,#f6e27a,#C9A227 50%,#f6e27a);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;filter:drop-shadow(0 2px 5px rgba(0,0,0,.4))}
+.hj{color:#f3e3a0;font-size:1.1rem}.gr{font-size:.85rem;opacity:.85}
+header{transition:padding .25s,border-radius .25s}
+header.mini{padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 10px;border-radius:0 0 18px 18px}
+header.mini h1{font-size:1.1rem}
+header.mini .clk{font-size:1.5rem;margin-top:0}
+header.mini .hj{font-size:.85rem}
+header.mini .gr{display:none}
 main{padding:18px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 18px)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .card{background:#fff;border:1.5px solid var(--gold);border-radius:18px;padding:20px 8px;text-align:center;font-size:1.1rem;color:var(--em);font-family:inherit;box-shadow:0 2px 8px rgba(11,93,75,.1)}
@@ -51,7 +60,7 @@ summary{color:var(--em);font-weight:bold}
 <div id="home" class="v"><div class="grid" id="g"></div></div>
 
 <div id="list" class="v">
- <div class="top"><button class="btn" onclick="history.back()">رجوع ›</button><h2>القرآن الكريم</h2></div>
+ <div class="top"><button class="btn" onclick="back()">رجوع ›</button><h2>القرآن الكريم</h2></div>
  <button class="btn" id="cont" style="display:none;width:100%" onclick="openSura(+ld('ln'))"></button>
  <input id="q" placeholder="ابحث باسم السورة أو رقمها" oninput="drawList(this.value.trim())">
  <div id="sl"></div>
@@ -60,7 +69,7 @@ summary{color:var(--em);font-weight:bold}
 
 <div id="reader" class="v">
  <div class="top">
-  <button class="btn" onclick="history.back()">رجوع ›</button>
+  <button class="btn" onclick="back()">رجوع ›</button>
   <button class="btn" onclick="fz(2)">أ+</button>
   <button class="btn" onclick="fz(-2)">أ−</button>
  </div>
@@ -69,19 +78,19 @@ summary{color:var(--em);font-weight:bold}
 </div>
 
 <div id="adk" class="v">
- <div class="top"><button class="btn" onclick="history.back()">رجوع ›</button><h2>الأذكار</h2></div>
+ <div class="top"><button class="btn" onclick="back()">رجوع ›</button><h2>الأذكار</h2></div>
  <input id="aq" placeholder="ابحث في الأذكار" oninput="drawAdk(this.value.trim())">
  <div id="al"></div>
  <div class="src">أذكار من كتاب «حصن المسلم» للشيخ سعيد بن علي بن وهف القحطاني، من ملف JSON لمستودع rn0x/hisn_almuslim_json. التخريج كما ورد في الملف.</div>
 </div>
 
 <div id="adr" class="v">
- <div class="top"><button class="btn" onclick="history.back()">رجوع ›</button><button class="btn" onclick="fz2(2)">أ+</button><button class="btn" onclick="fz2(-2)">أ−</button></div>
+ <div class="top"><button class="btn" onclick="back()">رجوع ›</button><button class="btn" onclick="fz2(2)">أ+</button><button class="btn" onclick="fz2(-2)">أ−</button></div>
  <h2 id="adt"></h2><div id="adb"></div>
 </div>
 
 <div id="cal" class="v">
- <div class="top"><button class="btn" onclick="history.back()">رجوع ›</button><h2>التقويم الهجري</h2></div>
+ <div class="top"><button class="btn" onclick="back()">رجوع ›</button><h2>التقويم الهجري</h2></div>
  <div class="mid"><button class="btn" onclick="cmo++;drawCal()">›</button><h2 id="ct"></h2><button class="btn" onclick="cmo--;drawCal()">‹</button></div>
  <div class="cg" id="cg"></div>
  <div class="note" id="co"></div>
@@ -93,7 +102,7 @@ summary{color:var(--em);font-weight:bold}
 </div>
 
 <div id="rem" class="v">
- <div class="top"><button class="btn" onclick="history.back()">رجوع ›</button><h2>التذكيرات</h2></div>
+ <div class="top"><button class="btn" onclick="back()">رجوع ›</button><h2>التذكيرات</h2></div>
  <div class="note">تنبيهات دورية بالصلاة على النبي صلى الله عليه وسلم والأذكار، تعمل دون إنترنت.</div>
  <p><label><input type="checkbox" id="ron">تفعيل التذكير</label></p>
  <label>كل:</label>
@@ -108,7 +117,7 @@ summary{color:var(--em);font-weight:bold}
 </div>
 
 <div id="other" class="v">
- <button class="btn" onclick="history.back()">رجوع ›</button>
+ <button class="btn" onclick="back()">رجوع ›</button>
  <h2 id="ot"></h2><div class="note" id="on"></div>
 </div>
 </main>
@@ -133,8 +142,16 @@ S.forEach((s,i)=>{const b=document.createElement("button");b.className="card";
 
 function show(v,np){
  VS.forEach(x=>$(x).style.display=x==v?"block":"none");
+ document.querySelector("header").classList.toggle("mini",v!="home");
  window.scrollTo(0,0);
- if(!np)history.pushState({v:v,n:cur},"")}
+ if(!np)ST.push(v)}
+let ST=["home"];
+const CAP=()=>window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App;
+function back(){
+ if(ST.length<=1){const A=CAP();if(A&&A.exitApp)A.exitApp();return}
+ ST.pop();const v=ST[ST.length-1];
+ if(v=="list")openList(true);else if(v=="adk")openAdk(true);else show(v,true)}
+(function(){const A=CAP();if(A&&A.addListener)A.addListener("backButton",()=>back())})();
 function other(s){show("other");$("ot").textContent=s[1];$("on").textContent="هذا القسم لم يُبنَ بعد، وسيُنفَّذ في المرحلة "+s[2]+"."}
 
 function tick(){const d=new Date();
@@ -277,16 +294,8 @@ async function sched(test){
  }catch(e){st.textContent="تعذّر ضبط التذكير: "+(e&&e.message||e)}}
 document.addEventListener("visibilitychange",()=>{if(!document.hidden&&R.on)sched()});
 
-window.addEventListener("popstate",e=>{
- const s=e.state||{v:"home"};
- if(s.v=="list")openList(true);
- else if(s.v=="reader")openSura(s.n,true);
- else if(s.v=="adk")openAdk(true);
- else if(s.v=="adr")openAdr(s.n,true);
- else if(s.v=="cal"){cmo=0;show("cal",true);drawCal()}
- else if(s.v=="rem")openRem(true);
- else show("home",true)});
-history.replaceState({v:"home"},"");
+document.addEventListener("contextmenu",e=>{if(e.target.tagName!="INPUT")e.preventDefault()});
+document.querySelector("header").onclick=function(){this.classList.toggle("mini")};
 tick();setInterval(tick,1000);
 show("home",true);
 if(R.on)sched();
