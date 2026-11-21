@@ -24,7 +24,15 @@ jobs:
         run: |
           M=android/app/src/main/AndroidManifest.xml
           sed -i '/android.permission.INTERNET/d' $M
-          sed -i 's#<application#<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>\n    <uses-permission android:name="android.permission.VIBRATE"/>\n    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>\n    <application#' $M
+          for P in POST_NOTIFICATIONS VIBRATE RECEIVE_BOOT_COMPLETED SCHEDULE_EXACT_ALARM USE_EXACT_ALARM ACCESS_COARSE_LOCATION ACCESS_FINE_LOCATION; do
+            sed -i "s#<application#<uses-permission android:name=\"android.permission.$P\"/>\n    <application#" $M
+          done
+      - name: Azan sound (optional)
+        run: |
+          if [ -f assets/azan.mp3 ]; then
+            mkdir -p android/app/src/main/res/raw
+            cp assets/azan.mp3 android/app/src/main/res/raw/azan.mp3
+          fi
       - run: npx cap sync android
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
