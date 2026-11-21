@@ -29,11 +29,13 @@ jobs:
           done
       - name: Azan sound (optional)
         run: |
-          for E in mp3 wav ogg; do
-            if [ -f assets/azan.$E ]; then
-              mkdir -p android/app/src/main/res/raw
-              cp assets/azan.$E android/app/src/main/res/raw/azan.$E
-            fi
+          for D in assets resources; do
+            for E in mp3 wav ogg; do
+              if [ -f $D/azan.$E ]; then
+                mkdir -p android/app/src/main/res/raw
+                cp $D/azan.$E android/app/src/main/res/raw/azan.$E
+              fi
+            done
           done
       - run: npx cap sync android
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
