@@ -50,14 +50,14 @@ input[type=checkbox]{width:22px;height:22px;margin:0 0 0 8px;vertical-align:midd
 .ft{font-size:.9rem;margin-top:12px}
 .led-card{background:linear-gradient(#f6e3b4,#efd49a);border:2px solid #8a5a2b;border-radius:18px;padding:12px;margin-top:8px}
 .nx{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;font-size:1.15rem;color:#5a2a10;font-weight:bold}
-.pnl{background:#000;border-radius:8px;padding:6px 8px;display:flex;justify-content:center;align-items:center;gap:3px;min-height:48px}
-.pnl svg{height:32px;width:auto}
-.prw,.cap{display:grid;grid-template-columns:1fr 84px 1fr;gap:6px;align-items:center}
+.pnl{background:#000;border-radius:8px;padding:6px 4px;display:flex;justify-content:center;align-items:center;gap:2px;min-height:46px;overflow:hidden;direction:ltr}
+.pnl svg{height:28px;width:auto;flex:none}
+.prw,.cap{display:grid;grid-template-columns:minmax(0,1fr) 80px minmax(0,1fr);gap:6px;align-items:center}
 .prw{margin:7px 0}
 .cap{text-align:center;font-weight:bold;color:#5a2a10;font-size:.9rem}
 .prw.nxt .pnl.a{box-shadow:0 0 0 2px var(--gold),0 0 14px #ff3b3b}
 .pl{background:#b0793f;color:#2a1405;border-radius:10px;text-align:center;font-size:1.05rem;padding:8px 2px;font-weight:bold}
-.ap{font-size:.72rem;color:#ff6b6b;margin-right:2px}
+.ap{font-size:.72rem;color:#ff6b6b;margin-right:4px}
 .set{background:#fff;border:1px solid #e6dcb4;border-radius:12px;padding:10px 14px;margin-top:14px}
 .set label{display:block;margin-top:10px;font-size:.95rem;color:var(--em)}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
@@ -328,7 +328,7 @@ const fa=a=>{a%=360;return a<0?a+360:a},fh=x=>{x%=24;return x<0?x+24:x};
 function sunPos(jd){const D=jd-2451545,g=fa(357.529+.98560028*D),q=fa(280.459+.98564736*D),L=fa(q+1.915*sn(g)+.02*sn(2*g)),e=23.439-3.6e-7*D,RA=fh(at2(cs(e)*sn(L),cs(L))/15);return{d:asn(sn(e)*sn(L)),eq:q/15-RA}}
 const METH={egy:{f:19.5,i:17.5},mwl:{f:18,i:17},uq:{f:18.5,i:0,im:90},khi:{f:18,i:18}};
 const CT=[["ود مدني",14.4012,33.5199],["الخرطوم",15.5007,32.5599],["أم درمان",15.6445,32.4777],["بورتسودان",19.6158,37.2164],["كسلا",15.4510,36.4040],["الأبيض",13.1842,30.2167],["المدينة المنورة",24.4686,39.6143],["مكة المكرمة",21.4225,39.8262],["جدة",21.4858,39.1925],["الرياض",24.7136,46.6753],["القاهرة",30.0444,31.2357]];
-let PT={city:"ود مدني",lat:14.4012,lng:33.5199,m:"egy",as:1,adj:{},iq:{fajr:20,dhuhr:15,asr:15,maghrib:5,isha:15},nn:true,ns:false};
+let PT={city:"ود مدني",lat:14.4012,lng:33.5199,m:"egy",as:1,adj:{dhuhr:1},iq:{fajr:20,dhuhr:15,asr:15,maghrib:5,isha:15},nn:true,ns:false};
 try{PT=Object.assign(PT,JSON.parse(ld("pt")||"{}"))}catch(e){}
 function calc(date){
  const y=date.getFullYear(),m=date.getMonth(),d=date.getDate(),tz=-new Date(y,m,d,12).getTimezoneOffset()/60;
@@ -339,11 +339,11 @@ function calc(date){
  t.isha=M.i?noon+H(-M.i):t.maghrib+M.im/60;
  const o={};for(const k in t)o[k]=fh(t[k]+off)+((PT.adj&&+PT.adj[k])||0)/60;return o}
 /*PT-END*/
-const SG={a:"12,4 48,4 44,10 16,10",b:"52,8 52,48 46,44 46,14",c:"52,56 52,96 46,90 46,60",d:"12,100 48,100 44,94 16,94",e:"8,56 8,96 14,90 14,60",f:"8,8 8,48 14,44 14,14",g:"12,52 16,48 44,48 48,52 44,56 16,56"};
+const SG={a:"12,5 18,1 42,1 48,5 42,11 18,11",b:"53,8 58,13 58,45 53,50 48,45 48,13",c:"53,56 58,61 58,93 53,98 48,93 48,61",d:"12,101 18,95 42,95 48,101 42,106 18,106",e:"7,56 12,61 12,93 7,98 2,93 2,61",f:"7,8 12,13 12,45 7,50 2,45 2,13",g:"12,53 18,48 42,48 48,53 42,58 18,58"};
 const DM=["abcdef","bc","abdeg","abcdg","bcfg","acdfg","acdefg","abc","abcdefg","abcdfg"];
 function led(s,on,off){let o="";for(const ch of s){
- if(ch==":"){o+=`<svg viewBox="0 0 20 104"><circle cx="10" cy="36" r="5" fill="${on}"/><circle cx="10" cy="68" r="5" fill="${on}"/></svg>`;continue}
- const d=DM[+ch];o+='<svg viewBox="0 0 60 104">'+Object.keys(SG).map(k=>`<polygon points="${SG[k]}" fill="${d.includes(k)?on:off}"/>`).join("")+"</svg>"}return o}
+ if(ch==":"){o+=`<svg viewBox="0 0 20 107"><circle cx="10" cy="36" r="5.5" fill="${on}"/><circle cx="10" cy="70" r="5.5" fill="${on}"/></svg>`;continue}
+ const d=DM[+ch];o+='<svg viewBox="0 0 60 107">'+Object.keys(SG).map(k=>`<polygon points="${SG[k]}" fill="${d.includes(k)?on:off}"/>`).join("")+"</svg>"}return o}
 const p2=n=>String(n).padStart(2,"0");
 function f12(x){x=fh(x);let H=Math.floor(x),M=Math.round((x-H)*60);if(M==60){M=0;H=(H+1)%24}return{s:p2(H%12||12)+":"+p2(M),p:H<12?"ص":"م"}}
 const PR=[["fajr","الفجر"],["sunrise","الشروق"],["dhuhr","الظهر"],["asr","العصر"],["maghrib","المغرب"],["isha","العشاء"]];
@@ -360,8 +360,8 @@ function drawPt(){
  PR.forEach(([k,n])=>{
   const nm=k=="dhuhr"&&now.getDay()==5?"الجمعة":n,a=f12(T[k]);
   const r=document.createElement("div");r.className="prw"+(NX&&NX.k==k?" nxt":"");
-  r.innerHTML='<div class="pnl a">'+led(a.s,"#ff2b2b","#3a0909")+'<span class="ap">'+a.p+'</span></div><div class="pl">'+nm+'</div>'+
-   (k=="sunrise"?"<div></div>":'<div class="pnl">'+led(f12(T[k]+((+PT.iq[k])||0)/60).s,"#2bdc5f","#073a14")+"</div>");
+  r.innerHTML='<div class="pnl a"><span class="ap">'+a.p+'</span>'+led(a.s,"#ff2b2b","#2a0606")+'</div><div class="pl">'+nm+'</div>'+
+   (k=="sunrise"?"<div></div>":'<div class="pnl">'+led(f12(T[k]+((+PT.iq[k])||0)/60).s,"#2bdc5f","#05260d")+"</div>");
   box.appendChild(r)});
  $("ptc").textContent=PT.city+" · "+(PT.m=="egy"?"الهيئة المصرية للمساحة":PT.m=="mwl"?"رابطة العالم الإسلامي":PT.m=="uq"?"أم القرى":"كراتشي")+" · قارن بمسجدك المحلي وعدّل الدقائق إن لزم";
  updNx()}
@@ -370,7 +370,7 @@ function updNx(){
  let d=Math.floor((NX.t-Date.now())/1000);
  if(d<0){drawPt();return}
  $("nxl").textContent="باقٍ "+(NX.jum?"للجمعة":PN[NX.k].replace(/^ال/,"لل"));
- $("nxc").innerHTML=led(p2(Math.floor(d/3600))+":"+p2(Math.floor(d%3600/60))+":"+p2(d%60),"#ffb020","#3a2808")}
+ $("nxc").innerHTML=led(p2(Math.floor(d/3600))+":"+p2(Math.floor(d%3600/60))+":"+p2(d%60),"#ffb020","#2a1d06")}
 function fillPtSet(){
  const c=$("pcity");if(!c.options.length){CT.forEach((x,i)=>c.add(new Option(x[0],i)));c.add(new Option("موقع مخصص",-1))
   PR.forEach(([k,n])=>{$("padj").insertAdjacentHTML("beforeend",`<div><span>${n}</span><input type="number" id="ad_${k}"></div>`);
