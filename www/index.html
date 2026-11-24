@@ -193,7 +193,9 @@ summary{color:var(--em);font-weight:bold}
   </g>
  </svg>
  <div id="qst"></div>
+ <div class="note" id="qdg" style="direction:rtl"></div>
  <div class="note" id="qbi"></div>
+ <p>تصحيح دقيق: <button class="btn" onclick="qAdj(-5)">−٥°</button> <button class="btn" onclick="qAdj(-1)">−١°</button> <button class="btn" onclick="qAdj(1)">+١°</button> <button class="btn" onclick="qAdj(5)">+٥°</button></p>
  <p><button class="btn" onclick="qGps()">📍 تحديث موقعي</button> <button class="btn" onclick="qCal()">معايرة على قبلة معروفة</button> <button class="btn" onclick="qRst()">تصفير المعايرة</button></p>
  <div class="src">ش شمال · ق شرق · ج جنوب · غ غرب. ضع الهاتف أفقياً وبعيداً عن المعادن والمغناطيس، وحرّكه على شكل ٨ للمعايرة. البوصلة تقرأ الشمال المغناطيسي وقد يخطئ ببضع درجات، فعايِرها بتوجيه الهاتف نحو محراب مسجد قريب ثم اضغط «معايرة».</div>
 </div>
@@ -608,6 +610,7 @@ function qDraw(){
  $("qdial").setAttribute("transform","rotate("+(-h).toFixed(1)+")");
  $("qring").setAttribute("stroke",ok?"#2bdc5f":"#C9A227");
  $("qst").textContent=ok?"✓ أنت متجه نحو القبلة":(df>0?"أدِر الهاتف يميناً "+ar(Math.round(df))+"°":"أدِر الهاتف يساراً "+ar(Math.round(-df))+"°");
+ $("qdg").textContent="قراءة الحساس: "+ar(Math.round(qRawH()))+"° · التصحيح المحفوظ: "+ar(Math.round(qOff*10)/10)+"° · الاتجاه بعد التصحيح: "+ar(Math.round(h))+"°";
  if(ok&&!qAl&&PT_hapOK())hap(false);qAl=ok}
 const PT_hapOK=()=>true;
 function openQb(np){show("qb",np);
@@ -625,8 +628,9 @@ function qStop(){if(!qOn)return;qOn=false;window.removeEventListener("deviceorie
 async function qGps(){await gps();drawQb()}
 function qCal(){
  if(!qS.init){$("qst").textContent="لا توجد قراءة من البوصلة بعد.";return}
- let o=QB-qRawH();o=((o+540)%360)-180;qOff=o;sv("qbo",o.toFixed(1));qDraw();$("qbi").textContent+=" · تصحيح المعايرة: "+ar(Math.round(o))+"°"}
+ let o=QB-qRawH();o=((o+540)%360)-180;qOff=o;sv("qbo",o.toFixed(1));qDraw();}
 function qRst(){qOff=0;sv("qbo","0");qDraw()}
+function qAdj(d){qOff=((qOff+d+540)%360)-180;sv("qbo",qOff.toFixed(1));qDraw()}
 /*QB-END*/
 
 function firstOf(off){
