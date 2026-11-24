@@ -48,6 +48,13 @@ input[type=checkbox]{width:22px;height:22px;margin:0 0 0 8px;vertical-align:midd
 .mid{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}
 .mid h2{margin:0;font-size:1.3rem}
 .ft{font-size:.9rem;margin-top:12px}
+.fr{display:flex;align-items:stretch;gap:6px;margin-bottom:8px}
+.fm{flex:1;background:#fff;border:1px solid #e6dcb4;border-radius:14px;padding:10px 12px;text-align:right;font-family:inherit;color:var(--ink);line-height:1.9;font-size:1rem}
+.fm b{display:block;color:var(--em);font-size:.85rem}
+.fr .cp{margin:0}
+.end{cursor:pointer;padding:0 2px}
+.end.fv{background:var(--gold);color:#fff;border-radius:8px}
+#qst{font-size:1.2rem;color:var(--em);text-align:center;margin:6px 0;min-height:2rem;font-weight:bold}
 .ht{flex:1;text-align:right;line-height:1.8;font-size:1rem}
 .num{padding:0 6px}
 .gd{font-size:.85rem;direction:ltr;text-align:left}
@@ -171,6 +178,41 @@ summary{color:var(--em);font-weight:bold}
  <div class="mid"><button class="btn" onclick="hGo(1)">التالي ‹</button><button class="btn" onclick="hGo(-1)">› السابق</button></div>
 </div>
 
+<div id="qb" class="v">
+ <div class="top"><button class="btn" onclick="back()">رجوع ›</button><h2>اتجاه القبلة</h2></div>
+ <svg viewBox="-115 -115 230 230" style="width:100%;max-width:330px;display:block;margin:8px auto">
+  <polygon points="0,-113 -10,-97 10,-97" fill="#C9A227"/>
+  <g id="qdial">
+   <circle id="qring" r="92" fill="#fff" stroke="#C9A227" stroke-width="5"/>
+   <g id="qtk" stroke="#0B5D4B" stroke-width="1.5"></g>
+   <g font-size="15" text-anchor="middle" dominant-baseline="middle" fill="#0B5D4B" font-weight="bold">
+    <text x="0" y="-76" fill="#c0392b">ش</text><text x="76" y="0">ق</text><text x="0" y="76">ج</text><text x="-76" y="0">غ</text>
+   </g>
+   <g id="qmk"><line x1="0" y1="0" x2="0" y2="-60" stroke="#C9A227" stroke-width="3" stroke-linecap="round"/><text y="-64" font-size="26" text-anchor="middle">🕋</text></g>
+   <circle r="5" fill="#0B5D4B"/>
+  </g>
+ </svg>
+ <div id="qst"></div>
+ <div class="note" id="qbi"></div>
+ <p><button class="btn" onclick="qGps()">📍 تحديث موقعي</button> <button class="btn" onclick="qCal()">معايرة على قبلة معروفة</button> <button class="btn" onclick="qRst()">تصفير المعايرة</button></p>
+ <div class="src">ش شمال · ق شرق · ج جنوب · غ غرب. ضع الهاتف أفقياً وبعيداً عن المعادن والمغناطيس، وحرّكه على شكل ٨ للمعايرة. البوصلة تقرأ الشمال المغناطيسي وقد يخطئ ببضع درجات، فعايِرها بتوجيه الهاتف نحو محراب مسجد قريب ثم اضغط «معايرة».</div>
+</div>
+
+<div id="fav" class="v">
+ <div class="top"><button class="btn" onclick="back()">رجوع ›</button><h2>المفضلة والبحث</h2></div>
+ <div class="mid" style="justify-content:center;gap:10px"><button class="btn" onclick="favTab('f')">⭐ المفضلة</button><button class="btn" onclick="favTab('s')">🔍 بحث شامل</button></div>
+ <div id="fvp">
+  <input id="fvq" placeholder="ابحث داخل المفضلة" oninput="drawFav()">
+  <div class="src" id="fvn"></div><div id="fvl"></div>
+ </div>
+ <div id="gsp" style="display:none">
+  <select id="gsc"><option value="q">القرآن الكريم</option><option value="d">الأذكار</option><option value="nawawi">الأربعون النووية</option><option value="bukhari">صحيح البخاري</option><option value="muslim">صحيح مسلم</option></select>
+  <input id="gq" placeholder="اكتب كلمة للبحث (تتجاهل التشكيل)">
+  <button class="btn" style="width:100%" onclick="gSearch()">بحث</button>
+  <div class="src" id="gcn"></div><div id="gres"></div>
+ </div>
+</div>
+
 <div id="cal" class="v">
  <div class="top"><button class="btn" onclick="back()">رجوع ›</button><h2>التقويم الهجري</h2></div>
  <div class="mid"><button class="btn" onclick="cmo++;drawCal()">›</button><h2 id="ct"></h2><button class="btn" onclick="cmo--;drawCal()">‹</button></div>
@@ -210,7 +252,7 @@ const AR='٠١٢٣٤٥٦٧٨٩',ar=n=>String(n).replace(/\d/g,d=>AR[d]);
 function ld(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function sv(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 let Q=null,fs=+ld('fs')||26,cur=0,cmo=0,adj=+ld("adj")||0;
-const VS=["home","list","reader","adk","adr","tsb","pt","hdk","hdl","hdr","cal","rem","other"];
+const VS=["home","list","reader","adk","adr","tsb","pt","hdk","hdl","hdr","qb","fav","cal","rem","other"];
 const HM=["محرم","صفر","ربيع الأول","ربيع الآخر","جمادى الأولى","جمادى الآخرة","رجب","شعبان","رمضان","شوال","ذو القعدة","ذو الحجة"];
 const OCC={"1-1":"رأس السنة الهجرية","10-1":"يوم عاشوراء","1-9":"بداية شهر رمضان","1-10":"عيد الفطر","9-12":"يوم عرفة","10-12":"عيد الأضحى"};
 const HF=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric",month:"numeric",year:"numeric"});
@@ -220,10 +262,11 @@ function hij(dt){const d=new Date(dt.getTime()+adj*864e5),o={};HF.formatToParts(
 const S=[["📖","القرآن الكريم"],["🤲","الأذكار","3"],["📿","المسبحة","4"],["📜","الأحاديث الصحيحة","5"],["🕌","مواقيت الصلاة","6"],["🧭","اتجاه القبلة","7"],["🌙","التقويم الهجري"],["⭐","المفضلة والبحث","9"],["🔔","تذكير بالصلاة على النبي"]];
 S.forEach((s,i)=>{const b=document.createElement("button");b.className="card";
  b.innerHTML=`<span>${s[0]}</span>${s[1]}`;if(i==8)b.style.gridColumn="1/-1";
- b.onclick=()=>i==0?openList():i==1?openAdk():i==2?openTsb():i==3?openHdk():i==4?openPt():i==6?openCal():i==8?openRem():other(s);$("g").appendChild(b)});
+ b.onclick=()=>i==0?openList():i==1?openAdk():i==2?openTsb():i==3?openHdk():i==4?openPt():i==5?openQb():i==7?openFav():i==6?openCal():i==8?openRem():other(s);$("g").appendChild(b)});
 
 function show(v,np){
  VS.forEach(x=>$(x).style.display=x==v?"block":"none");
+ if(v!="qb")qStop();
  document.querySelector("header").classList.toggle("mini",v!="home");
  window.scrollTo(0,0);
  if(!np)ST.push(v)}
@@ -263,7 +306,7 @@ function drawList(q){
   const b=document.createElement("button");b.className="row";
   b.innerHTML=`<span class="num">${ar(i)}</span><span>${s[4]}</span><span class="meta">${s[7]=="Meccan"?"مكية":"مدنية"} · ${ar(s[1])} آية</span>`;
   b.onclick=()=>openSura(i);box.appendChild(b)})}
-async function openSura(n,np){
+async function openSura(n,np,ay){
  cur=n;show("reader",np);const box=$("rd");box.textContent="جارٍ التحميل…";
  try{
   const q=await loadQ(),s=QuranData.Sura[n],v=q[n];
@@ -272,13 +315,18 @@ async function openSura(n,np){
   if(n!=1&&n!=9&&bsm&&first.startsWith(bsm)){
    const h=document.createElement("div");h.className="bsm";h.textContent=bsm;box.appendChild(h);
    first=first.slice(bsm.length).trim()}
+  const hn=document.createElement("div");hn.className="src";hn.textContent="اضغط رقم الآية لإضافتها إلى المفضلة";box.appendChild(hn);
   const p=document.createElement("div");p.className="mus";p.style.fontSize=fs+"px";p.id="mus";
   for(let a=1;a<v.length;a++){
-   p.append((a==1?first:v[a])+" ");
-   const m=document.createElement("span");m.className="end";m.textContent="\uFD3F"+ar(a)+"\uFD3E ";p.append(m)}
+   const tx=a==1?first:v[a],sp=document.createElement("span");sp.id="ay"+a;sp.textContent=tx+" ";p.appendChild(sp);
+   const m=document.createElement("span");m.className="end";m.textContent="\uFD3F"+ar(a)+"\uFD3E ";
+   const key="q:"+n+":"+a;if(isFav(key))m.classList.add("fv");
+   m.onclick=()=>{m.classList.toggle("fv",togFav({k:key,t:"q",s:n,a:a,sn:s[4],p:pvw(tx,14)}))};
+   p.appendChild(m)}
   box.appendChild(p);
   const same=ld("ln")==String(n);sv("ln",n);
-  window.scrollTo(0,same?(+ld("pos")||0):0);
+  if(ay){const e=$("ay"+ay);if(e){e.style.background="#fff3c4";e.scrollIntoView({block:"center"})}}
+  else window.scrollTo(0,same?(+ld("pos")||0):0);
  }catch(e){box.textContent="تعذّر تحميل نص القرآن. تأكد أن الملف quran-uthmani.txt موجود داخل مجلد www."}}
 function fz(d){fs=Math.max(18,Math.min(54,fs+d));sv("fs",fs);const m=$("mus");if(m)m.style.fontSize=fs+"px"}
 let tm;window.addEventListener("scroll",()=>{if($("reader").style.display!="block")return;clearTimeout(tm);tm=setTimeout(()=>sv("pos",Math.round(window.scrollY)),300)});
@@ -303,18 +351,19 @@ function drawAdk(q){
   const b=document.createElement("button");b.className="row";
   b.innerHTML='<span class="num">'+ar(i+1)+'</span><span></span><span class="meta">'+ar(c.x.length)+' نص</span>';
   b.children[1].textContent=c.t;b.onclick=()=>openAdr(i);box.appendChild(b)})}
-function openAdr(n,np){
+function openAdr(n,np,sc){
  cur=n;show("adr",np);const c=AD[n],box=$("adb");
  $("adt").textContent=c.t;box.innerHTML="";
- c.x.forEach(t=>{
-  const d=document.createElement("div");d.className="ad";d.style.fontSize=afs+"px";
+ c.x.forEach((t,ii)=>{
+  const d=document.createElement("div");d.className="ad";d.id="adi"+ii;d.style.fontSize=afs+"px";
   const s=document.createElement("div");s.textContent=t;d.appendChild(s);
   const b=document.createElement("button");b.className="cp";b.textContent="نسخ";
   b.onclick=()=>{try{navigator.clipboard.writeText(t);b.textContent="تم النسخ"}catch(e){b.textContent="تعذّر النسخ"}};
-  d.appendChild(b);box.appendChild(d)});
+  d.appendChild(b);d.appendChild(starBtn({k:"d:"+n+":"+ii,t:"d",c:n,i:ii,ct:c.t,p:pvw(t,14)}));box.appendChild(d)});
  if(c.f.length){const dt=document.createElement("details"),sm=document.createElement("summary");
   sm.textContent="التخريج والملاحظات";dt.appendChild(sm);
-  c.f.forEach(t=>{const p=document.createElement("div");p.textContent=t;dt.appendChild(p)});box.appendChild(dt)}}
+  c.f.forEach(t=>{const p=document.createElement("div");p.textContent=t;dt.appendChild(p)});box.appendChild(dt)}
+ if(sc!=null){const e=$("adi"+sc);if(e){e.style.borderColor="#0B5D4B";e.scrollIntoView({block:"center"})}}}
 function fz2(d){afs=Math.max(16,Math.min(48,afs+d));sv("afs",afs);document.querySelectorAll("#adb .ad").forEach(e=>e.style.fontSize=afs+"px")}
 
 const TP=["سُبْحَانَ اللَّهِ","الْحَمْدُ لِلَّهِ","اللَّهُ أَكْبَرُ","لَا إِلَهَ إِلَّا اللَّهُ","أَسْتَغْفِرُ اللَّهَ","سُبْحَانَ اللَّهِ وَبِحَمْدِهِ","اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ","عدّاد حر"];
@@ -479,7 +528,7 @@ function renderHdr(){
  const s=document.createElement("div");s.textContent=x.t;d.appendChild(s);
  const b=document.createElement("button");b.className="cp";b.textContent="نسخ";
  b.onclick=()=>{try{navigator.clipboard.writeText(x.t);b.textContent="تم النسخ"}catch(e){b.textContent="تعذّر النسخ"}};
- d.appendChild(b);box.appendChild(d);
+ d.appendChild(b);d.appendChild(starBtn({k:"h:"+HC.id+":"+x.n,t:"h",col:HC.id,cn:HC.n,n:x.n,p:pvw(x.t,14)}));box.appendChild(d);
  if(x.g.length){const dt=document.createElement("details"),sm=document.createElement("summary");
   sm.textContent="الدرجة (كما وردت في الملف)";dt.appendChild(sm);
   x.g.forEach(g=>{const p=document.createElement("div");p.className="gd";p.textContent=(g.name||"")+": "+(g.grade||"");dt.appendChild(p)});box.appendChild(dt)}
@@ -487,6 +536,98 @@ function renderHdr(){
 function hGo(d){const a=HD[HC.id];const n=hIdx+d;if(n>=0&&n<a.length){hIdx=n;renderHdr()}}
 function fzh(d){hfs=Math.max(18,Math.min(54,hfs+d));sv("hfs",hfs);const e=$("hdt");if(e)e.style.fontSize=hfs+"px"}
 /*H-END*/
+
+/*FV-START*/
+let FV=[];try{FV=JSON.parse(ld("fav")||"[]")}catch(e){}
+const svF=()=>sv("fav",JSON.stringify(FV));
+const isFav=k=>FV.some(f=>f.k==k);
+function pvw(t,n){n=n||14;const w=String(t).replace(/\s+/g," ").trim().split(" ");return w.length>n?w.slice(0,n).join(" ")+" …":w.join(" ")}
+function togFav(o){const i=FV.findIndex(f=>f.k==o.k);if(i>=0){FV.splice(i,1);svF();return false}o.ts=Date.now();FV.unshift(o);svF();return true}
+function starBtn(o){const b=document.createElement("button");b.className="cp";
+ const up=()=>{b.textContent=isFav(o.k)?"★ في المفضلة":"☆ للمفضلة"};up();
+ b.onclick=()=>{togFav(Object.assign({},o));up()};return b}
+function flabel(f){return f.t=="q"?"سورة "+f.sn+" · آية "+ar(f.a):f.t=="d"?"ذكر · "+(f.ct||""):(f.cn||"حديث")+" · "+ar(f.n)}
+let FT="f",GR=[],GS=40;
+function openFav(np){show("fav",np);favTab(FT)}
+function favTab(t){FT=t;$("fvp").style.display=t=="f"?"block":"none";$("gsp").style.display=t=="s"?"block":"none";if(t=="f")drawFav()}
+function frow(f,del){
+ const d=document.createElement("div");d.className="fr";
+ d.innerHTML='<button class="fm"><b></b><span></span></button>';
+ d.querySelector("b").textContent=flabel(f);d.querySelector("span").textContent=pvw(f.p,16);
+ d.querySelector(".fm").onclick=()=>openRes(f);
+ if(del){const x=document.createElement("button");x.className="cp";x.textContent="✕";x.onclick=()=>{FV=FV.filter(z=>z.k!=f.k);svF();drawFav()};d.appendChild(x)}
+ return d}
+function drawFav(){
+ const box=$("fvl"),k=nz($("fvq").value.trim());box.innerHTML="";
+ $("fvn").textContent=FV.length?"عدد المفضلة: "+ar(FV.length):"لا توجد مفضلة بعد. اضغط ☆ في الأذكار والأحاديث، أو اضغط رقم الآية في القرآن.";
+ FV.filter(f=>!k||nz(f.p+" "+flabel(f)).includes(k)).forEach(f=>box.appendChild(frow(f,true)))}
+async function openRes(r){
+ try{
+  if(r.t=="q")openSura(r.s,false,r.a);
+  else if(r.t=="d"){await loadAd();openAdr(r.c,false,r.i)}
+  else{HC=HCOL.find(c=>c.id==r.col)||HC;const H=await loadH(HC),i=H.findIndex(x=>x.n==r.n);if(i>=0)openHdr(i)}
+ }catch(e){}}
+async function gSearch(){
+ const q=nz($("gq").value.trim()),sc=$("gsc").value,box=$("gres");
+ if(q.length<2){box.textContent="اكتب حرفين على الأقل.";return}
+ box.textContent="جارٍ البحث… (قد يطول قليلاً في البخاري ومسلم)";$("gcn").textContent="";GR=[];GS=40;
+ try{
+  if(sc=="q"){const Qd=await loadQ();for(let s=1;s<=114;s++){const v=Qd[s];if(!v)continue;for(let a=1;a<v.length;a++)if(nz(v[a]).includes(q))GR.push({t:"q",s:s,a:a,sn:QuranData.Sura[s][4],p:v[a]})}}
+  else if(sc=="d"){const A=await loadAd();A.forEach((c,ci)=>c.x.forEach((tx,i)=>{if(nz(tx).includes(q))GR.push({t:"d",c:ci,i:i,ct:c.t,p:tx})}))}
+  else{const c=HCOL.find(z=>z.id==sc),H=await loadH(c);H.forEach(x=>{if((x.nt||(x.nt=nz(x.t))).includes(q))GR.push({t:"h",col:c.id,cn:c.n,n:x.n,p:x.t})})}
+  drawGR()
+ }catch(e){box.textContent="تعذّر البحث: "+e.message}}
+function drawGR(){
+ const box=$("gres");box.innerHTML="";$("gcn").textContent="النتائج: "+ar(GR.length);
+ GR.slice(0,GS).forEach(r=>box.appendChild(frow(r,false)));
+ if(GR.length>GS){const m=document.createElement("button");m.className="btn";m.style.width="100%";m.textContent="عرض المزيد";m.onclick=()=>{GS+=40;drawGR()};box.appendChild(m)}}
+/*FV-END*/
+
+/*QB-START*/
+const KAABA=[21.4225,39.8262],WIND=["شمال","شمال شرق","شرق","جنوب شرق","جنوب","جنوب غرب","غرب","شمال غرب"];
+function qBear(lat,lng){const f1=lat*R2,f2=KAABA[0]*R2,dl=(KAABA[1]-lng)*R2;
+ const y=Math.sin(dl)*Math.cos(f2),x=Math.cos(f1)*Math.sin(f2)-Math.sin(f1)*Math.cos(f2)*Math.cos(dl);
+ return (Math.atan2(y,x)/R2+360)%360}
+function qDist(lat,lng){const dp=(KAABA[0]-lat)*R2,dl=(KAABA[1]-lng)*R2,a=Math.sin(dp/2)**2+Math.cos(lat*R2)*Math.cos(KAABA[0]*R2)*Math.sin(dl/2)**2;return 2*6371*Math.asin(Math.sqrt(a))}
+function qHead(a,b,g){const A=a*R2,B=b*R2,G=g*R2,cA=Math.cos(A),sA=Math.sin(A),cB=Math.cos(B),sB=Math.sin(B),cG=Math.cos(G),sG=Math.sin(G);
+ const m12=-cB*sA,m22=cA*cB,m13=cG*sA*sB+cA*sG,m23=sA*sG-cA*cG*sB,m33=cB*cG;
+ const h=Math.abs(m33)>.7?Math.atan2(m12,m22):Math.atan2(-m13,-m23);return (h/R2+360)%360}
+let QB=0,qOff=+ld("qbo")||0,qS={x:0,y:0,init:false},qOn=false,qAl=false,qT=0,qRaf=0;
+function qEvt(e){
+ let h=null;
+ if(typeof e.webkitCompassHeading=="number")h=e.webkitCompassHeading;
+ else if(e.alpha!=null&&e.beta!=null&&e.gamma!=null&&(e.absolute||e.type=="deviceorientationabsolute"))h=qHead(e.alpha,e.beta,e.gamma);
+ if(h==null)return;
+ const r=h*R2;
+ if(!qS.init){qS.x=Math.cos(r);qS.y=Math.sin(r);qS.init=true}else{qS.x+=(Math.cos(r)-qS.x)*.25;qS.y+=(Math.sin(r)-qS.y)*.25}
+ if(!qRaf)qRaf=requestAnimationFrame(()=>{qRaf=0;qDraw()})}
+function qRawH(){return (Math.atan2(qS.y,qS.x)/R2+360)%360}
+function qDraw(){
+ if(!qS.init||!qOn)return;
+ const h=(qRawH()+qOff+360)%360,df=((QB-h+540)%360)-180,ok=Math.abs(df)<=3;
+ $("qdial").setAttribute("transform","rotate("+(-h).toFixed(1)+")");
+ $("qring").setAttribute("stroke",ok?"#2bdc5f":"#C9A227");
+ $("qst").textContent=ok?"✓ أنت متجه نحو القبلة":(df>0?"أدِر الهاتف يميناً "+ar(Math.round(df))+"°":"أدِر الهاتف يساراً "+ar(Math.round(-df))+"°");
+ if(ok&&!qAl&&PT_hapOK())hap(false);qAl=ok}
+const PT_hapOK=()=>true;
+function openQb(np){show("qb",np);
+ let t="";for(let a=0;a<360;a+=15){const L=a%90==0?0:a%45==0?8:4;t+='<line x1="0" y1="-92" x2="0" y2="'+(-92+L+4)+'" transform="rotate('+a+')"/>'}
+ $("qtk").innerHTML=t;drawQb();qStart()}
+function drawQb(){
+ QB=qBear(PT.lat,PT.lng);$("qmk").setAttribute("transform","rotate("+QB.toFixed(1)+")");
+ $("qbi").textContent="الموقع: "+PT.city+" · زاوية القبلة: "+ar(Math.round(QB))+"° من الشمال ("+WIND[Math.round(QB/45)%8]+") · المسافة إلى الكعبة: "+ar(Math.round(qDist(PT.lat,PT.lng)))+" كم"}
+function qStart(){
+ qStop();qOn=true;qS.init=false;qAl=false;
+ window.addEventListener("deviceorientationabsolute",qEvt,true);window.addEventListener("deviceorientation",qEvt,true);
+ $("qst").textContent="جارٍ قراءة البوصلة… حرّك الهاتف على شكل ٨";
+ qT=setTimeout(()=>{if(!qS.init)$("qst").textContent="حساس البوصلة غير متاح. اتجه نحو الزاوية "+ar(Math.round(QB))+"° من الشمال."},3000)}
+function qStop(){if(!qOn)return;qOn=false;window.removeEventListener("deviceorientationabsolute",qEvt,true);window.removeEventListener("deviceorientation",qEvt,true);clearTimeout(qT)}
+async function qGps(){await gps();drawQb()}
+function qCal(){
+ if(!qS.init){$("qst").textContent="لا توجد قراءة من البوصلة بعد.";return}
+ let o=QB-qRawH();o=((o+540)%360)-180;qOff=o;sv("qbo",o.toFixed(1));qDraw();$("qbi").textContent+=" · تصحيح المعايرة: "+ar(Math.round(o))+"°"}
+function qRst(){qOff=0;sv("qbo","0");qDraw()}
+/*QB-END*/
 
 function firstOf(off){
  const t=new Date();t.setHours(12,0,0,0);
