@@ -38,6 +38,29 @@ jobs:
               fi
             done
           done
+      - name: Reminder chime (generated)
+        run: |
+          mkdir -p android/app/src/main/res/raw
+          python3 - <<'PY'
+          import wave, math, struct
+          sr = 22050
+          total = int(sr * 2.6)
+          buf = [0.0] * total
+          for start, f in ((0.0, 880.0), (0.45, 1174.66)):
+              s0 = int(sr * start)
+              for i in range(int(sr * 2.0)):
+                  t = i / sr
+                  env = math.exp(-2.2 * t) * min(1.0, i / (sr * 0.006))
+                  v = env * (math.sin(2*math.pi*f*t) + 0.4*math.sin(2*math.pi*2*f*t) + 0.2*math.sin(2*math.pi*3*f*t))
+                  if s0 + i < total:
+                      buf[s0 + i] += v
+          peak = max(abs(x) for x in buf)
+          w = wave.open("android/app/src/main/res/raw/tazkir.wav", "wb")
+          w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr)
+          w.writeframes(b"".join(struct.pack("<h", int(30000 * x / peak)) for x in buf))
+          w.close()
+
+          PY
       - name: Copy data files to www
         run: |
           for F in ara-*.json hisn_almuslim.json; do
