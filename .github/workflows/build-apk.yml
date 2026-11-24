@@ -42,6 +42,16 @@ jobs:
           for F in ara-*.json hisn_almuslim.json; do
             if [ -f "$F" ] && [ ! -f "www/$F" ]; then cp "$F" "www/$F"; fi
           done
+      - name: Download Bukhari and Muslim (bundled into the app, app stays offline)
+        continue-on-error: true
+        run: |
+          for E in ara-bukhari ara-muslim; do
+            for U in "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/$E.min.json" "https://raw.githubusercontent.com/fawazahmed0/hadith-api/1/editions/$E.min.json"; do
+              if curl -fsSL --retry 3 --max-time 600 "$U" -o "www/$E.min.json"; then echo "downloaded from $U"; break; fi
+            done
+            python3 -c "import json;d=json.load(open('www/$E.min.json',encoding='utf-8'));print('$E hadiths:',len(d['hadiths']))" || rm -f "www/$E.min.json"
+            ls -la www/ | grep "$E" || echo "$E NOT FOUND"
+          done
       - run: npx cap sync android
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
