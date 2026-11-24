@@ -24,6 +24,7 @@ jobs:
         run: |
           M=android/app/src/main/AndroidManifest.xml
           sed -i '/android.permission.INTERNET/d' $M
+          sed -i 's#android:launchMode="singleTask"#android:launchMode="singleTask" android:screenOrientation="portrait"#' $M
           for P in POST_NOTIFICATIONS VIBRATE RECEIVE_BOOT_COMPLETED SCHEDULE_EXACT_ALARM USE_EXACT_ALARM ACCESS_COARSE_LOCATION ACCESS_FINE_LOCATION; do
             sed -i "s#<application#<uses-permission android:name=\"android.permission.$P\"/>\n    <application#" $M
           done
