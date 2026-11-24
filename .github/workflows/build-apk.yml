@@ -37,6 +37,11 @@ jobs:
               fi
             done
           done
+      - name: Copy data files to www
+        run: |
+          for F in ara-*.json hisn_almuslim.json; do
+            if [ -f "$F" ] && [ ! -f "www/$F" ]; then cp "$F" "www/$F"; fi
+          done
       - run: npx cap sync android
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
