@@ -467,7 +467,7 @@ function drawHdl(){
  f.slice(0,HS.shown).forEach(x=>{
   const b=document.createElement("button");b.className="row";
   b.innerHTML='<span class="num"></span><span class="ht"></span>';
-  b.children[0].textContent=ar(x.n);const pv=x.t.replace(/\s+/g," ");b.children[1].textContent=pv.length>110?pv.slice(0,110)+"…":pv;
+  b.children[0].textContent=ar(x.n);const w=x.t.replace(/\s+/g," ").split(" ");b.children[1].textContent=w.length>12?w.slice(0,12).join(" ")+" …":w.join(" ");
   b.onclick=()=>openHdr(a.indexOf(x));box.appendChild(b)});
  if(f.length>HS.shown){const m=document.createElement("button");m.className="btn";m.style.width="100%";
   m.textContent="عرض المزيد";m.onclick=()=>{HS.shown+=50;drawHdl()};box.appendChild(m)}}
