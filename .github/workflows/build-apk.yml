@@ -38,9 +38,10 @@ jobs:
               fi
             done
           done
-      - name: Reminder chime (generated)
+      - name: Reminder sound (your recording, else a generated chime)
         run: |
-          mkdir -p android/app/src/main/res/raw
+          RAW=android/app/src/main/res/raw
+          mkdir -p $RAW
           python3 - <<'PY'
           import wave, math, struct
           sr = 22050
@@ -55,12 +56,19 @@ jobs:
                   if s0 + i < total:
                       buf[s0 + i] += v
           peak = max(abs(x) for x in buf)
-          w = wave.open("android/app/src/main/res/raw/tazkir.wav", "wb")
+          w = wave.open("android/app/src/main/res/raw/chime.wav", "wb")
           w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr)
           w.writeframes(b"".join(struct.pack("<h", int(30000 * x / peak)) for x in buf))
           w.close()
-
           PY
+          FOUND=0
+          for D in assets resources; do
+            for E in mp3 wav ogg m4a aac amr 3gp; do
+              if [ -f $D/tazkir.$E ]; then cp $D/tazkir.$E $RAW/tazkir.$E; FOUND=1; echo "using your recording: $D/tazkir.$E"; fi
+            done
+          done
+          if [ $FOUND = 0 ]; then cp $RAW/chime.wav $RAW/tazkir.wav; echo "no recording found, using the chime"; fi
+          ls -la $RAW
       - name: Copy data files to www
         run: |
           for F in ara-*.json hisn_almuslim.json; do
