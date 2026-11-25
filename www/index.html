@@ -473,13 +473,13 @@ async function schedAzan(test){
  if(!L){if(test)st.textContent="التنبيهات تعمل داخل التطبيق المثبّت فقط.";return}
  try{
   try{await L.createChannel({id:"azan_snd",name:"الأذان (ملف صوتي)",importance:5,visibility:1,sound:"azan.mp3",vibration:true})}catch(e){}
-  try{await L.createChannel({id:"azan_def2",name:"الأذان (نغمة)",importance:5,visibility:1,sound:"tazkir.wav",vibration:true})}catch(e){}
+  try{await L.createChannel({id:"azan_def3",name:"الأذان (نغمة)",importance:5,visibility:1,sound:"chime.wav",vibration:true})}catch(e){}
   const p=await L.getPending(),od=(p.notifications||[]).filter(n=>n.id>=2000);
   if(od.length)await L.cancel({notifications:od});
   if(!PT.nn&&!test){if(st)st.textContent="تنبيهات الأذان متوقفة.";return}
   let pm=await L.checkPermissions();if(pm.display!="granted")pm=await L.requestPermissions();
   if(pm.display!="granted"){if(st)st.textContent="لم يُمنح إذن الإشعارات. فعّله من إعدادات الهاتف.";return}
-  const ch=PT.ns?"azan_snd":"azan_def2",n=[],now=Date.now();
+  const ch=PT.ns?"azan_snd":"azan_def3",n=[],now=Date.now();
   for(let day=0;day<7;day++){
    const d=new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()+day,12),T=calc(d);
    ["fajr","dhuhr","asr","maghrib","isha"].forEach((k,i)=>{
@@ -675,7 +675,7 @@ async function sched(test){
  const L=LN(),st=$("rs");
  if(!L){st.textContent="التذكير يعمل داخل التطبيق المثبّت على الهاتف فقط.";return}
  try{
-  try{await L.createChannel({id:"rem_chime",name:"تذكير الصلاة على النبي (بصوت)",importance:4,visibility:1,sound:"tazkir.wav",vibration:true})}catch(e){}
+  try{await L.createChannel({id:"rem_voice",name:"تذكير الصلاة على النبي (بصوت)",importance:4,visibility:1,sound:"tazkir.wav",vibration:true})}catch(e){}
   try{await L.createChannel({id:"rem_quiet",name:"تذكير صامت",importance:2,visibility:1,vibration:false})}catch(e){}
   const p=await L.getPending();
   const od=(p.notifications||[]).filter(n=>n.id<2000);if(od.length)await L.cancel({notifications:od});
@@ -683,8 +683,8 @@ async function sched(test){
   let pm=await L.checkPermissions();
   if(pm.display!="granted")pm=await L.requestPermissions();
   if(pm.display!="granted"){st.textContent="لم يُمنح إذن الإشعارات. فعّله من إعدادات الهاتف ثم أعد المحاولة.";return}
-  const ls=R.ph.length?R.ph:[0],n=[],now=Date.now(),rch=R.sn!==false?"rem_chime":"rem_quiet";let k=0;
-  if(test)n.push({id:999,title:"سَكِينَة",body:PH[ls[0]],channelId:"rem_chime",schedule:{at:new Date(now+10000),allowWhileIdle:true}});
+  const ls=R.ph.length?R.ph:[0],n=[],now=Date.now(),rch=R.sn!==false?"rem_voice":"rem_quiet";let k=0;
+  if(test)n.push({id:999,title:"سَكِينَة",body:PH[ls[0]],channelId:"rem_voice",schedule:{at:new Date(now+10000),allowWhileIdle:true}});
   if(R.on){const step=R.iv*60000;let t=now+step,i=0;
    while(n.length<60&&i++<500){const h=new Date(t).getHours();
     const q=R.qa>R.qb?(h>=R.qa||h<R.qb):(h>=R.qa&&h<R.qb);
