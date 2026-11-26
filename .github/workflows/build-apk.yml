@@ -85,6 +85,17 @@ jobs:
             ls -la www/ | grep "$E" || echo "$E NOT FOUND"
           done
       - run: npx cap sync android
+      - name: Stable signing key (so updates install over the old app)
+        env:
+          DEBUG_KEYSTORE_B64: ${{ secrets.DEBUG_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$DEBUG_KEYSTORE_B64" ]; then
+            mkdir -p ~/.android
+            echo "$DEBUG_KEYSTORE_B64" | base64 -d > ~/.android/debug.keystore
+            echo "using the saved signing key"
+          else
+            echo "NO saved signing key: this build gets a temporary key (uninstall the old app first)"
+          fi
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
