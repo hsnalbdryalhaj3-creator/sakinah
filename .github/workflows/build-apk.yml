@@ -69,6 +69,14 @@ jobs:
           done
           if [ $FOUND = 0 ]; then cp $RAW/chime.wav $RAW/tazkir.wav; echo "no recording found, using the chime"; fi
           ls -la $RAW
+      - name: Notification icon (white crescent and star)
+        run: |
+          mkdir -p android/app/src/main/res/drawable
+          cat > android/app/src/main/res/drawable/ic_stat_sakinah.xml <<'XML'
+          <vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+            <path android:fillColor="#FFFFFFFF" android:fillType="evenOdd" android:pathData="M19.41,15.2 A9,9 0 1,1 10.29,3.03 A7.6,7.6 0 0,0 19.41,15.2 Z M17.6,4.9a1.7,1.7 0 1,0 0.01,0z"/>
+          </vector>
+          XML
       - name: Copy data files to www
         run: |
           for F in ara-*.json hisn_almuslim.json; do
@@ -97,7 +105,9 @@ jobs:
             echo "NO saved signing key: this build gets a temporary key (uninstall the old app first)"
           fi
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
+      - name: Name the APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk "android/app/build/outputs/apk/debug/سكينة.apk"
       - uses: actions/upload-artifact@v4
         with:
           name: SAKINAH-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/debug/سكينة.apk
