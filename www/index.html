@@ -89,7 +89,7 @@ summary{color:var(--em);font-weight:bold}
 <body>
 <header><h1>سَكِينَة</h1><div class="clk" id="clk"></div><div class="hj" id="hj"></div><div class="gr" id="gr"></div></header>
 <main>
-<div id="home" class="v"><div class="grid" id="g"></div></div>
+<div id="home" class="v"><div class="grid" id="g"></div><button class="btn" style="display:block;margin:18px auto 0" onclick="openAb()">ℹ️ عن التطبيق</button></div>
 
 <div id="list" class="v">
  <div class="top"><button class="btn" onclick="back()">رجوع ›</button><h2>القرآن الكريم</h2></div>
@@ -215,6 +215,19 @@ summary{color:var(--em);font-weight:bold}
  </div>
 </div>
 
+<div id="ab" class="v">
+ <div class="top"><button class="btn" onclick="back()">رجوع ›</button><h2>عن التطبيق</h2></div>
+ <div class="note"><b>سَكِينَة</b> · الإصدار ١٫٠<br>تطبيق إسلامي مجاني، بلا إعلانات ولا اشتراكات ولا حسابات. يعمل دون إنترنت بعد التثبيت، ولا يملك صلاحية الاتصال بالإنترنت أصلاً، ولا يجمع أي بيانات عنك. ما تحفظه (المفضلة، العدّادات، الإعدادات) يبقى على هاتفك فقط.</div>
+ <h2>المصادر</h2>
+ <div class="note"><b>القرآن الكريم:</b> نص المصحف العثماني من مشروع تنزيل (tanzil.net)، الإصدار ١٫١، ويُعرض دون أي تعديل، وفق شروط المشروع.</div>
+ <div class="note"><b>الأذكار:</b> كتاب «حصن المسلم» للشيخ سعيد بن علي بن وهف القحطاني، من ملف JSON في مستودع rn0x/hisn_almuslim_json. والتخريج كما ورد في الملف.</div>
+ <div class="note"><b>الأحاديث:</b> الأربعون النووية وصحيح البخاري وصحيح مسلم، من مستودع fawazahmed0/hadith-api (ملكية عامة). والدرجات والعزو كما وردت في الملفات.</div>
+ <div class="note"><b>المواقيت والقبلة:</b> حساب فلكي محلي على هاتفك. وهي اجتهاد حسابي قد يختلف بدقائق عن التقويم المعتمد في بلدك، فراجع مسجدك أو الجهة الرسمية وعدّل الدقائق من الإعدادات. والبوصلة تقرأ الشمال المغناطيسي وتحتاج معايرة.</div>
+ <div class="note"><b>التقويم الهجري:</b> تقويم أم القرى الحسابي، وقد يختلف يوماً عن الرؤية المحلية.</div>
+ <div id="abz"></div>
+ <div class="src">نسأل الله أن ينفع به، وأن يجعله خالصاً لوجهه الكريم.</div>
+</div>
+
 <div id="cal" class="v">
  <div class="top"><button class="btn" onclick="back()">رجوع ›</button><h2>التقويم الهجري</h2></div>
  <div class="mid"><button class="btn" onclick="cmo++;drawCal()">›</button><h2 id="ct"></h2><button class="btn" onclick="cmo--;drawCal()">‹</button></div>
@@ -255,7 +268,7 @@ const AR='٠١٢٣٤٥٦٧٨٩',ar=n=>String(n).replace(/\d/g,d=>AR[d]);
 function ld(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function sv(k,v){try{localStorage.setItem(k,v)}catch(e){}}
 let Q=null,fs=+ld('fs')||26,cur=0,cmo=0,adj=+ld("adj")||0;
-const VS=["home","list","reader","adk","adr","tsb","pt","hdk","hdl","hdr","qb","fav","cal","rem","other"];
+const VS=["home","list","reader","adk","adr","tsb","pt","hdk","hdl","hdr","qb","fav","ab","cal","rem","other"];
 const HM=["محرم","صفر","ربيع الأول","ربيع الآخر","جمادى الأولى","جمادى الآخرة","رجب","شعبان","رمضان","شوال","ذو القعدة","ذو الحجة"];
 const OCC={"1-1":"رأس السنة الهجرية","10-1":"يوم عاشوراء","1-9":"بداية شهر رمضان","1-10":"عيد الفطر","9-12":"يوم عرفة","10-12":"عيد الأضحى"};
 const HF=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura",{day:"numeric",month:"numeric",year:"numeric"});
@@ -633,6 +646,9 @@ function qCal(){
 function qRst(){qOff=0;sv("qbo","0");qDraw()}
 function qAdj(d){qOff=((qOff+d+540)%360)-180;sv("qbo",qOff.toFixed(1));qDraw()}
 /*QB-END*/
+
+const AZAN_CREDIT="";
+function openAb(np){show("ab",np);$("abz").innerHTML=AZAN_CREDIT?'<div class="note"><b>الصوتيات:</b> </div>':"";if(AZAN_CREDIT)$("abz").firstChild.append(AZAN_CREDIT)}
 
 function firstOf(off){
  const t=new Date();t.setHours(12,0,0,0);
