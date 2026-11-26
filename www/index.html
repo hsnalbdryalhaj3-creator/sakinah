@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>سَكِينَة</title>
+<title>سكينة</title>
 <style>
 :root{--em:#0B5D4B;--em2:#06382d;--gold:#C9A227;--bg:#FBF9F3;--ink:#1d2b27}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -87,7 +87,7 @@ summary{color:var(--em);font-weight:bold}
 </style>
 </head>
 <body>
-<header><h1>سَكِينَة</h1><div class="clk" id="clk"></div><div class="hj" id="hj"></div><div class="gr" id="gr"></div></header>
+<header><h1>سكينة</h1><div class="clk" id="clk"></div><div class="hj" id="hj"></div><div class="gr" id="gr"></div></header>
 <main>
 <div id="home" class="v"><div class="grid" id="g"></div><button class="btn" style="display:block;margin:18px auto 0" onclick="openAb()">ℹ️ عن التطبيق</button></div>
 
@@ -217,7 +217,7 @@ summary{color:var(--em);font-weight:bold}
 
 <div id="ab" class="v">
  <div class="top"><button class="btn" onclick="back()">رجوع ›</button><h2>عن التطبيق</h2></div>
- <div class="note"><b>سَكِينَة</b> · الإصدار ١٫٠<br>تطبيق إسلامي مجاني، بلا إعلانات ولا اشتراكات ولا حسابات. يعمل دون إنترنت بعد التثبيت، ولا يملك صلاحية الاتصال بالإنترنت أصلاً، ولا يجمع أي بيانات عنك. ما تحفظه (المفضلة، العدّادات، الإعدادات) يبقى على هاتفك فقط.</div>
+ <div class="note"><b>سكينة</b> · الإصدار ١٫٠<br>تطبيق إسلامي مجاني، بلا إعلانات ولا اشتراكات ولا حسابات. يعمل دون إنترنت بعد التثبيت، ولا يملك صلاحية الاتصال بالإنترنت أصلاً، ولا يجمع أي بيانات عنك. ما تحفظه (المفضلة، العدّادات، الإعدادات) يبقى على هاتفك فقط.</div>
  <h2>المصادر</h2>
  <div class="note"><b>القرآن الكريم:</b> نص المصحف العثماني من مشروع تنزيل (tanzil.net)، الإصدار ١٫١، ويُعرض دون أي تعديل، وفق شروط المشروع.</div>
  <div class="note"><b>الأذكار:</b> كتاب «حصن المسلم» للشيخ سعيد بن علي بن وهف القحطاني، من ملف JSON في مستودع rn0x/hisn_almuslim_json. والتخريج كما ورد في الملف.</div>
@@ -700,11 +700,11 @@ async function sched(test){
   if(pm.display!="granted")pm=await L.requestPermissions();
   if(pm.display!="granted"){st.textContent="لم يُمنح إذن الإشعارات. فعّله من إعدادات الهاتف ثم أعد المحاولة.";return}
   const ls=R.ph.length?R.ph:[0],n=[],now=Date.now(),rch=R.sn!==false?"rem_voice":"rem_quiet";let k=0;
-  if(test)n.push({id:999,title:"سَكِينَة",body:PH[ls[0]],channelId:"rem_voice",schedule:{at:new Date(now+10000),allowWhileIdle:true}});
+  if(test)n.push({id:999,title:"سكينة",body:PH[ls[0]],channelId:"rem_voice",schedule:{at:new Date(now+10000),allowWhileIdle:true}});
   if(R.on){const step=R.iv*60000;let t=now+step,i=0;
    while(n.length<60&&i++<500){const h=new Date(t).getHours();
     const q=R.qa>R.qb?(h>=R.qa||h<R.qb):(h>=R.qa&&h<R.qb);
-    if(!q)n.push({id:1000+n.length,title:"سَكِينَة",body:PH[ls[k++%ls.length]],channelId:rch,schedule:{at:new Date(t),allowWhileIdle:true}});
+    if(!q)n.push({id:1000+n.length,title:"سكينة",body:PH[ls[k++%ls.length]],channelId:rch,schedule:{at:new Date(t),allowWhileIdle:true}});
     t+=step}}
   if(n.length)await L.schedule({notifications:n});
   st.textContent=test?"سيصلك تنبيه تجريبي بعد 10 ثوانٍ.":"تمت الجدولة: "+ar(n.length)+" تنبيهاً قادماً."
