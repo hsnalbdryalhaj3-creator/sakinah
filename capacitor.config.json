@@ -1,5 +1,11 @@
 {
   "appId": "com.sakinah.app",
-  "appName": "سَكِينَة",
-  "webDir": "www"
+  "appName": "سكينة",
+  "webDir": "www",
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_sakinah",
+      "iconColor": "#0B5D4B"
+    }
+  }
 }
